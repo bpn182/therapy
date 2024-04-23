@@ -8,10 +8,24 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        darkblue: "#203840",
+        darkblueshade: "#2F4248",
+        darkbluehover: "#1b424b",
+        customGreen: "#8BC53F",
+        customDarkGreen: "#6E9D2F",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "custom-right-image": "url('/assets/images/meditation.jpg')",
+      },
+      backgroundRepeat: {
+        "no-repeat": "no-repeat",
+      },
+      backgroundSize: {
+        cover: "cover",
       },
     },
   },
