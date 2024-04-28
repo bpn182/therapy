@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        default: ["Greycliffcf", "sans-serif"],
+      },
       colors: {
         darkblue: "#203840",
         darkblueshade: "#2F4248",
@@ -20,6 +23,7 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "custom-right-image": "url('/assets/images/meditation.jpg')",
+        "dashboard-top-image": "url('/assets/images/home-top.jpg')",
       },
       backgroundRepeat: {
         "no-repeat": "no-repeat",

@@ -8,7 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input: FC<InputProps> = ({ placeholder, type }) => {
   return (
     <input
-      className="w-full px-3 py-3 border border-transparent bg-darkblueshade rounded-[6px] focus:outline-none hover:border-customGreen"
+      className="w-full px-3 py-3 border border-transparent bg-gray-200 rounded-[6px] focus:outline-none hover:border-customGreen"
       type={type}
       placeholder={placeholder}
     />
