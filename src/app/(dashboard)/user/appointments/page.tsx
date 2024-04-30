@@ -10,19 +10,19 @@ const appointments = [
     time: "10:00 AM",
   },
   {
-    customer: "Bipin Bhandari",
+    customer: "Kamala Khadka",
     doctor: "Dr. Johnson",
     date: "2022-01-02",
     time: "2:00 PM",
   },
   {
-    customer: "Bipin Bhandari",
+    customer: "Sudeep Sharma",
     doctor: "Dr. Williams",
     date: "2022-01-03",
     time: "1:00 PM",
   },
   {
-    customer: "Bipin Bhandari",
+    customer: "Sangharsha Chaulagain",
     doctor: "Dr. Davis",
     date: "2022-01-04",
     time: "3:00 PM",
