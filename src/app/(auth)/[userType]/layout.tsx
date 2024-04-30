@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import logo from "@public/assets/images/alt-icon.png";
+import logo from "@public/assets/images/logo-black.png";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 

@@ -27,7 +27,9 @@ export default function SignUp({ params }: { params: { userType: string } }) {
           <Input type="text" placeholder="Last Name" />
           <Input type="text" placeholder="Email" />
           <Input type="password" placeholder="Password" />
-          <Button text="Register" />
+          <Link href={"/user/signin"}>
+            <Button text="Register" />
+          </Link>
         </form>
         <div className="text-left font-medium mt-4">
           {"Already have an account?"}
