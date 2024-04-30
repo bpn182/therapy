@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 
 interface INavBarProps {
-  userType: string;
+  userType?: string;
 }
 
 const IconCss = "h-5 w-5 mr-4 text-customGreen font-bold";
@@ -18,13 +18,15 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
   const menuItems = [
     {
       name: "Account settings",
-      href: `/${userType}/account-settings`,
+      href: `/user`,
       icon: <HomeIcon className={"h-5 w-5 mr-4 text-customGreen font-bold"} />,
+      disabled: true,
     },
     {
       name: "Sign out",
-      href: `/${userType}/signin`,
+      href: `/user/signin`,
       icon: <ArrowLeftEndOnRectangleIcon className={IconCss} />,
+      disabled: false,
     },
   ];
   return (

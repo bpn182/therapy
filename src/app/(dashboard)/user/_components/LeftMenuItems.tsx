@@ -16,17 +16,17 @@ export default function LeftMenuItems() {
     {
       text: "My Dashboard",
       icon: <HomeIcon />,
-      href: "/user",
+      href: ["/user"],
     },
     {
       text: "Appointments",
       icon: <CalendarDaysIcon />,
-      href: "/user/appointments",
+      href: ["/user/appointments", "/user/create-appointment"],
     },
     {
       text: "Claims",
       icon: <DocumentIcon />,
-      href: "/user/claims",
+      href: ["/user/claims", "/user/add-claim"],
     },
   ];
 
@@ -35,14 +35,14 @@ export default function LeftMenuItems() {
       {menuItems.map((item, index) => (
         <Link
           key={index}
-          href={item.href}
+          href={item.href[0]}
           className={joinClassNames(
             "flex",
             "group",
             "px-4",
             "py-4",
             "rounded-xl",
-            pathname === item.href
+            item.href.includes(pathname)
               ? "bg-customGreen text-white"
               : "hover:bg-gray-200"
           )}
@@ -51,7 +51,7 @@ export default function LeftMenuItems() {
             className={joinClassNames(
               "w-6",
               "mr-4",
-              pathname === item.href
+              item.href.includes(pathname)
                 ? "text-white"
                 : "text-customGreen group-hover:text-customGreen"
             )}
@@ -62,7 +62,9 @@ export default function LeftMenuItems() {
           <div
             className={joinClassNames(
               "font-medium",
-              pathname === item.href ? "text-white" : "group-hover:text-black"
+              item.href.includes(pathname)
+                ? "text-white"
+                : "group-hover:text-black"
             )}
           >
             {item.text}

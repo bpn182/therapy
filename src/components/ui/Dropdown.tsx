@@ -6,6 +6,7 @@ interface IMenuItem {
   name: string;
   href: string;
   icon: ReactNode;
+  disabled: boolean;
 }
 
 interface IDropdownProps {

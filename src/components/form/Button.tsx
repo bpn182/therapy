@@ -1,18 +1,31 @@
 "use client";
+import { joinClassNames } from "@/utils/utils";
 import { ReactNode } from "react";
 
 type ButtonProps = {
   text: string;
   rightIcon?: ReactNode;
   onClick?: () => void;
+  className?: string;
+  disabled?: boolean;
 };
 
-const Button = ({ text, rightIcon, onClick }: ButtonProps) => (
+const Button = ({
+  text,
+  rightIcon,
+  onClick,
+  className = "",
+  disabled = false,
+}: ButtonProps) => (
   <button
     onClick={onClick}
-    className="group flex justify-center  items-center bg-customGreen w-full rounded-[6px] hover:bg-darkbluehover text-black hover:text-white transform hover:-translate-y-[3px]"
+    disabled={disabled}
+    className={joinClassNames(
+      className,
+      "group flex justify-center items-center bg-customGreen w-full rounded-[6px] hover:bg-darkbluehover hover:text-white transform hover:-translate-y-[3px]"
+    )}
   >
-    <span className="pl-5 py-3 font-medium">{text}</span>
+    <span className="py-3 font-medium">{text}</span>
     {rightIcon && rightIcon}
   </button>
 );
