@@ -20,7 +20,7 @@ export default function SignUp({ params }: { params: { userType: string } }) {
       <div className="text-center w-96 mx-auto bg-white px-8 py-8 rounded-2xl shadow-lg">
         <div>
           To get started{" "}
-          <span className="font-bold ">Let's Create an Account</span>
+          <span className="font-bold ">{"Let's Create an Account"}</span>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3  pt-2">
           <Input type="text" placeholder="First Name" />
