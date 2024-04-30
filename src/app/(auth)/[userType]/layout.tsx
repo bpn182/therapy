@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import logo from "@public/assets/images/alt-icon.png";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Therapy Login",
@@ -25,7 +26,7 @@ export default function AuthLayout({
 
   return (
     <div className="text-center h-screen bg-gray-100">
-      <div className="pt-8 pb-8 flex justify-center">
+      <Link href="/" className="pt-8 pb-8 flex justify-center">
         <Image
           width={100}
           height={100}
@@ -33,7 +34,7 @@ export default function AuthLayout({
           src={logo}
           alt="Alt Therapy"
         />
-      </div>
+      </Link>
       <div className="mb-4 text-gray-900">
         Welcome to <span className="font-bold "> Alt Therapy</span>
       </div>
