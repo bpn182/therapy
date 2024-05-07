@@ -4,7 +4,7 @@ export const therapyPathConfig: IPathConfig = {
   "/therapy": {
     mainText: "Hello, ",
     highlightText: "Bipin",
-    subText: "Welcome to Alt Therapy",
+    subText: "Manage your therapy services here",
   },
   "/therapy/appointment/list": {
     mainText: "Your ",

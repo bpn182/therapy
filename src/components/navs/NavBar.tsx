@@ -32,7 +32,7 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
   return (
     <nav className="bg-darkblue text-white flex items-center justify-between flex-wrap py-2 pl-20 pr-16">
       <div className="cursor-pointer">
-        <Link href={`/${userType}`}>
+        <Link href={`/`}>
           <Image
             className=" border-customGreen object-cover w-16 h-10 mr-4"
             src={logo}
