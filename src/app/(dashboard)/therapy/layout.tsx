@@ -60,7 +60,7 @@ export default function TherapyLayout({
 
   return (
     <>
-      <NavBar />
+      <NavBar userType={"therapy"} />
       <main className="h-screen bg-gray-100">
         <div className="flex justify-center pt-8">
           <LeftMenuItems menuItems={menuItems} />

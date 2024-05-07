@@ -18,13 +18,13 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
   const menuItems = [
     {
       name: "Account settings",
-      href: `/user`,
+      href: `/${userType}`,
       icon: <HomeIcon className={"h-5 w-5 mr-4 text-customGreen font-bold"} />,
       disabled: true,
     },
     {
       name: "Sign out",
-      href: `/user/signin`,
+      href: `/${userType}/signin`,
       icon: <ArrowLeftEndOnRectangleIcon className={IconCss} />,
       disabled: false,
     },
@@ -32,7 +32,7 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
   return (
     <nav className="bg-darkblue text-white flex items-center justify-between flex-wrap py-2 pl-20 pr-16">
       <div className="cursor-pointer">
-        <Link href="/user">
+        <Link href={`/${userType}`}>
           <Image
             className=" border-customGreen object-cover w-16 h-10 mr-4"
             src={logo}

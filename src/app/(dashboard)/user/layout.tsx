@@ -44,7 +44,7 @@ export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
 
   return (
     <>
-      <NavBar />
+      <NavBar userType="user" />
       <main className="h-screen bg-gray-100">
         <div className="flex justify-center pt-8">
           <LeftMenuItems menuItems={menuItems} />
