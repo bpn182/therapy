@@ -17,6 +17,9 @@ const config: Config = {
         darkbluehover: "#1b424b",
         customGreen: "#8BC53F",
         customDarkGreen: "#6E9D2F",
+        editGreen: "#8BC53F",
+        dangerRed: "#FF0000",
+
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

@@ -17,11 +17,11 @@ export default function Home() {
       </div>
 
       <div className="flex justify-center mt-32 space-x-4 font-bold">
-        <Link href="/user" className="w-48">
+        <Link href="/user/signin" className="w-48">
           <Button text="Client" />
         </Link>
-        <Link href="/#" className="w-48 ">
-          <Button text="Therapy Provider " disabled={true} />
+        <Link href="/therapy/signin" className="w-48 ">
+          <Button text="Therapy Provider " />
         </Link>
       </div>
     </main>

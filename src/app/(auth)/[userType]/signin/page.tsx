@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/form/Input";
 import Button from "@/components/form/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,8 +29,12 @@ export default function SignIn({ params }: { params: { userType: string } }) {
           Please <span className="font-bold ">Sign in</span>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3  pt-2">
-          <Input type="text" placeholder="Email" />
-          <Input type="password" placeholder="Password" />
+          <input className="custom-input" type="text" placeholder="Email" />
+          <input
+            className="custom-input"
+            type="password"
+            placeholder="Password"
+          />
           <Button text="Login" onClick={navigateToDashboard} />
         </form>
         <div className="text-left font-medium mt-4">

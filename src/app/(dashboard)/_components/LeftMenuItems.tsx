@@ -1,37 +1,19 @@
 "use client";
-import {
-  HomeIcon,
-  CalendarDaysIcon,
-  DocumentIcon,
-} from "@heroicons/react/24/outline";
+
 import Link from "next/link";
-import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { joinClassNames } from "@/utils/utils";
+import { IMenuItem } from "@/app/interfaces/index.interface";
 
-export default function LeftMenuItems() {
+interface ILeftMenuItemsProps {
+  menuItems: IMenuItem[];
+}
+
+const LeftMenuItems: React.FC<ILeftMenuItemsProps> = ({ menuItems }) => {
   const pathname = usePathname();
 
-  const menuItems = [
-    {
-      text: "My Dashboard",
-      icon: <HomeIcon />,
-      href: ["/user"],
-    },
-    {
-      text: "Appointments",
-      icon: <CalendarDaysIcon />,
-      href: ["/user/appointments", "/user/create-appointment"],
-    },
-    {
-      text: "Claims",
-      icon: <DocumentIcon />,
-      href: ["/user/claims", "/user/add-claim"],
-    },
-  ];
-
   return (
-    <div className="px-4 py-4 bg-white rounded-xl mr-4 ml-24 w-72 divide-y divide-gray-200 flex-none h-48">
+    <div className="px-4 py-4 bg-white rounded-xl mr-4 ml-24 w-72 divide-y divide-gray-200 flex-shrink">
       {menuItems.map((item, index) => (
         <Link
           key={index}
@@ -73,4 +55,6 @@ export default function LeftMenuItems() {
       ))}
     </div>
   );
-}
+};
+
+export default LeftMenuItems;

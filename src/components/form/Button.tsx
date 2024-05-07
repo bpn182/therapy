@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 
 type ButtonProps = {
   text: string;
+  type?: "button" | "submit" | "reset";
   rightIcon?: ReactNode;
   onClick?: () => void;
   className?: string;
@@ -16,8 +17,10 @@ const Button = ({
   onClick,
   className = "",
   disabled = false,
+  type = "button",
 }: ButtonProps) => (
   <button
+    type={type}
     onClick={onClick}
     disabled={disabled}
     className={joinClassNames(
