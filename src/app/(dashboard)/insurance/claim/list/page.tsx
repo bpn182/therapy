@@ -3,9 +3,9 @@ import { IClaim } from "@/app/interfaces/claim.interface";
 import { TitleWithLine } from "@/components/ui/TitleWithLine";
 import { mockClaims } from "@/constants/mock";
 import { useTherapyStore } from "@/store/zustand";
-import { TrashIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+
 
 
 export default function Claims() {
@@ -15,12 +15,9 @@ export default function Claims() {
   const handleEdit = (claim: IClaim) => {
     setClaim(claim);
     console.log(claim);
-    router.push("/user/claim/update");
+    router.push("/insurance/claim/update");
   };
 
-  const handleDelete = (claim: IClaim) => {
-    console.log(claim);
-  };
   return (
     <>
       <TitleWithLine title="Claims" />
@@ -28,7 +25,7 @@ export default function Claims() {
         <thead>
           <tr>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Insurance Provider
+              User
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Type
@@ -50,9 +47,7 @@ export default function Claims() {
         <tbody>
           {mockClaims.map((claim, index) => (
             <tr key={index}>
-              <td className="border-b border-gray-200 py-2">
-                {claim.insuranceProvider}
-              </td>
+              <td className="border-b border-gray-200 py-2">{claim.user}</td>
               <td className="border-b border-gray-200 py-2">
                 {claim.claimType}
               </td>
@@ -66,10 +61,6 @@ export default function Claims() {
                 <PencilSquareIcon
                   className="cursor-pointer"
                   onClick={() => handleEdit(claim)}
-                />
-                <TrashIcon
-                  className="text-dangerRed cursor-pointer"
-                  onClick={() => handleDelete(claim)}
                 />
               </td>
             </tr>

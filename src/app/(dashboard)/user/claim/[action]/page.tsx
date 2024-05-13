@@ -3,12 +3,13 @@ import { IClaim } from "@/app/interfaces/claim.interface";
 import Button from "@/components/form/Button";
 import { TitleWithLine } from "@/components/ui/TitleWithLine";
 import { useTherapyStore } from "@/store/zustand";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export default function AddClaim() {
   const { claim } = useTherapyStore();
   const { register, handleSubmit, setValue } = useForm<IClaim>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (claim) {
@@ -39,6 +40,12 @@ export default function AddClaim() {
               className="custom-input"
               type="text"
               placeholder="Claim Type"
+            />
+            <input
+              ref={fileInputRef}
+              className=""
+              type="file"
+              accept="image/*"
             />
           </div>
           <div className="flex-1 mt-4 md:mt-0">

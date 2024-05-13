@@ -4,4 +4,8 @@ export interface IClaim {
   claimType: string;
   claimDetails: string;
   date: string;
+  status: string;
+  file?: string;
+  feedback?: string;
+  user:string;
 }

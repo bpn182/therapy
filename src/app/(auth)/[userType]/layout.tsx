@@ -20,7 +20,7 @@ export default function AuthLayout({
   params,
 }: Readonly<IAuthLayoutProps>) {
   // Only allow therapy and user as user types
-  if (!["therapy", "user"].includes(params.userType)) {
+  if (!["therapy", "user", "insurance", "admin"].includes(params.userType)) {
     redirect("/404");
   }
 

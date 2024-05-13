@@ -3,12 +3,13 @@ import { IService } from "@/app/interfaces/services.interface";
 import Button from "@/components/form/Button";
 import { TitleWithLine } from "@/components/ui/TitleWithLine";
 import { useTherapyStore } from "@/store/zustand";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export default function AddService() {
   const { service } = useTherapyStore();
   const { register, handleSubmit, setValue } = useForm<IService>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (service) {
@@ -33,8 +34,21 @@ export default function AddService() {
               type="text"
               placeholder="Service Name"
             />
+            <input
+              {...register("price")}
+              className="custom-input"
+              type="text"
+              placeholder="Price"
+            />
           </div>
+
           <div className="flex-1 space-y-2 md:mt-0">
+            <input
+              ref={fileInputRef}
+              className=""
+              type="file"
+              accept="image/*"
+            />
             <textarea
               {...register("description")}
               placeholder="Description"

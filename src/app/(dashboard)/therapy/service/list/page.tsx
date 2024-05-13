@@ -11,22 +11,26 @@ const services = [
     name: "Therapy",
     description:
       "Therapy is  intended to relieve or heal a stress and anxiety.",
+    price: "$100",
   },
   {
     _id: "2",
     name: "Accupuncture",
     description: "Accupuncture is a form of alternative medicine.",
+    price: "$200",
   },
   {
     _id: "3",
     name: "Chiropractic",
     description: "Chiropractic is a form of alternative medicine.",
+    price: "$110",
   },
   {
     _id: "4",
     name: "Physiotherapy",
     description:
       "Physiotherapy is a health care profession that aims to help patients.",
+    price: "$90",
   },
 ];
 
@@ -69,6 +73,9 @@ export default function Services() {
               Description
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
+              Price
+            </th>
+            <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Actions
             </th>
           </tr>
@@ -80,6 +87,7 @@ export default function Services() {
               <td className="border-b border-gray-200 py-2">
                 {service.description}
               </td>
+              <td className="border-b border-gray-200 py-2">{service.price}</td>
               <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
                 <PencilSquareIcon
                   className="cursor-pointer"

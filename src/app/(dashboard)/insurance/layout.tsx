@@ -3,42 +3,22 @@ import NavBar from "@/components/navs/NavBar";
 import LeftMenuItems from "../_components/LeftMenuItems";
 import TopImageBanner from "../_components/TopImageBanner";
 import { useRouter } from "next/navigation";
-import { therapyPathConfig } from "@/constants/therapy.constants";
-import {
-  HomeIcon,
-  CalendarDaysIcon,
-  UserPlusIcon,
-  BookOpenIcon,
-} from "@heroicons/react/24/outline";
+import { insurancePathConfig } from "@/constants/insurance.constants";
+import { HomeIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import TherapyServiceStat from "../_components/TherapyServiceStat";
 
 const menuItems = [
   {
     text: "My Dashboard",
     icon: <HomeIcon />,
-    href: ["/therapy"],
+    href: ["/insurance"],
   },
   {
-    text: "Appointments",
-    icon: <CalendarDaysIcon />,
-    href: ["/therapy/appointment/list", "/therapy/appointment/create"],
-  },
-  {
-    text: "Services",
-    icon: <BookOpenIcon />,
+    text: "Claims",
+    icon: <DocumentIcon />,
     href: [
-      "/therapy/service/list",
-      "/therapy/service/add",
-      "/therapy/service/update",
-    ],
-  },
-  {
-    text: "Doctors",
-    icon: <UserPlusIcon />,
-    href: [
-      "/therapy/doctor/list",
-      "/therapy/doctor/add",
-      "/therapy/doctor/update",
+      "/insurance/claim/list",
+      "/insurance/claim/update",
     ],
   },
 ];
@@ -46,27 +26,23 @@ const menuItems = [
 interface IUserLayoutProps {
   children: React.ReactNode;
 }
-export default function TherapyLayout({
-  children,
-}: Readonly<IUserLayoutProps>) {
+export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
   const router = useRouter();
-
-
 
   return (
     <>
-      <NavBar userType={"therapy"} />
+      <NavBar userType="user" />
       <main className="h-screen bg-gray-100">
-        <div className="flex pt-8">
+        <div className="flex justify-center pt-8">
           <LeftMenuItems menuItems={menuItems} />
 
           <div className="flex-1 flex flex-col  mr-20">
             <div className="flex gap-x-4 h-30  text-white">
-              <TopImageBanner pathConfig={therapyPathConfig} />
+              <TopImageBanner pathConfig={insurancePathConfig} />
               <TherapyServiceStat
-                url="/therapy/service/list"
-                mainText="Services"
-                subText="Current Services"
+                url="/insurance/claim/list"
+                mainText="Claims"
+                subText="View Claims"
                 count={4}
               />
             </div>
