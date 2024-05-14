@@ -1,14 +1,11 @@
 "use client";
 import NavBar from "@/components/navs/NavBar";
 import LeftMenuItems from "../_components/LeftMenuItems";
-import { useRouter } from "next/navigation";
-import { insurancePathConfig } from "@/constants/insurance.constants";
 import {
   HomeIcon,
-  DocumentIcon,
   UserIcon,
   BuildingOffice2Icon,
-  BookOpenIcon,
+  DocumentIcon,
 } from "@heroicons/react/24/outline";
 import StatCard from "@/components/card/statCard";
 
@@ -33,14 +30,17 @@ const menuItems = [
     icon: <BuildingOffice2Icon />,
     href: ["/admin/insurance/list", "/admin/user/update"],
   },
+  {
+    text: "Claims",
+    icon: <DocumentIcon />,
+    href: ["/admin/claim/list", "/admin/claim/update"],
+  },
 ];
 
 interface IUserLayoutProps {
   children: React.ReactNode;
 }
 export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
-  const router = useRouter();
-
   return (
     <>
       <NavBar userType="user" />
@@ -53,7 +53,7 @@ export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
               <StatCard
                 text="Users"
                 count={4}
-                link="/admin/users"
+                link="/admin/user/list"
                 icon={<UserIcon className="w-6 h-6" />}
               />
 
@@ -61,14 +61,14 @@ export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
                 className=" bg-darkblueshade"
                 text="Therapies"
                 count={6}
-                link="/admin/users"
+                link="/admin/therapy/list"
                 icon={<HomeIcon className="w-6 h-6" />}
               />
 
               <StatCard
                 text="Insurances"
                 count={5}
-                link="/admin/users"
+                link="/admin/insurance/list"
                 icon={<BuildingOffice2Icon className="w-6 h-6" />}
               />
 
@@ -76,8 +76,8 @@ export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
                 className=" bg-darkblueshade"
                 text="Claims"
                 count={4}
-                link="/admin/users"
-                icon={<BookOpenIcon className="w-6 h-6" />}
+                link="/admin/claim/list"
+                icon={<DocumentIcon className="w-6 h-6" />}
               />
             </div>
 

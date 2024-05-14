@@ -4,6 +4,7 @@ import {
   UserIcon,
   ArrowLongRightIcon,
 } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 import { ReactElement } from "react";
 
 interface IStatCardProps {
@@ -19,10 +20,18 @@ const StatCard: React.FC<IStatCardProps> = ({
   text,
   count,
   className,
+  link,
 }) => {
+  const router = useRouter();
+
+  const handleLinkClick = (link: string) => {
+    router.push(link);
+  };
+
   return (
     <div
-      className={`font-medium bg-darkblue rounded-xl min-w-[200px] p-4 min-h-[120px] ${className}`}
+      className={`font-medium bg-darkblue rounded-xl min-w-[200px] p-4 min-h-[120px] cursor-pointer ${className}`}
+      onClick={() => handleLinkClick(link)}
     >
       <div className="flex flex-row">
         <div className="text-white">{icon}</div>
