@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 // Axios Configuration
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env.SERVER_URL,
+  baseURL: "https://api-gateway.csangharsha.com.np",
   timeout: 100000,
 });
 

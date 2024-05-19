@@ -1,8 +1,11 @@
 "use client";
+import Api from "@/api/api";
 import Button from "@/components/form/Button";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function SignUp({ params }: { params: { userType: string } }) {
   const router = useRouter();
@@ -14,8 +17,28 @@ export default function SignUp({ params }: { params: { userType: string } }) {
     formState: { errors },
   } = useForm();
 
+  const mutation = useMutation({
+    mutationFn: Api.registerUser,
+    onSuccess: () => {
+      // router.push(`/${userType}/signin`);
+      toast.success("Success Notification !", {
+        position: "top-right",
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("An error occurred", {
+        position: "top-right",
+      });
+    },
+  });
+
   const onSubmit = (data: any) => {
-    console.log(data);
+    // data.role = "ADMIN";
+    // data.firstName = "Bipin";
+    // data.lastName = "Bhandari";
+    console.log("data before", data);
+    mutation.mutate(data);
   };
 
   const navigateToLogin = () => {
@@ -23,6 +46,7 @@ export default function SignUp({ params }: { params: { userType: string } }) {
   };
   return (
     <div>
+      <ToastContainer />
       <div className="text-center w-96 mx-auto bg-white px-8 py-8 rounded-2xl shadow-lg">
         <div>
           To get started
@@ -59,7 +83,7 @@ export default function SignUp({ params }: { params: { userType: string } }) {
             type="password"
             placeholder="Password"
           />
-          <Button text="Register" onClick={navigateToLogin} />
+          <Button text="Register" type="submit" />
         </form>
         <div className="text-left font-medium mt-4">
           {"Already have an account?"}

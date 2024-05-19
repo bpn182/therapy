@@ -1,18 +1,19 @@
 // api/api.ts
 import { AxiosInstance } from "axios";
 import { axiosInstance } from "./axiosConfig";
+import { IUser } from "@/app/interfaces/user.interface";
 
 class API {
   private api: AxiosInstance;
 
-  constructor(api: AxiosInstance) {
-    this.api = api;
+  constructor(instance: AxiosInstance) {
+    this.api = instance;
   }
 
-  public async getBuyersById(id: string) {
-    const response = await this.api.get(`/buyer/${id}`);
-    return response.data;
-  }
+  public registerUser = async (user: IUser) => {
+    const response = await this.api.post(`/auth/users/register`, user);
+    return response;
+  };
 }
-const apiInstance = new API(axiosInstance);
-export default apiInstance;
+const Api = new API(axiosInstance);
+export default Api;

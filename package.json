@@ -19,6 +19,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
     "react-hook-form": "^7.51.3",
+    "react-toastify": "^10.0.5",
     "recharts": "^2.12.7",
     "zustand": "^4.5.2"
   },
