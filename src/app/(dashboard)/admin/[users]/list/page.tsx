@@ -1,42 +1,59 @@
 "use client";
-import Button from "@/components/form/Button";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useClaimListQuery } from "@/Query/claim.query";
+import { useUserListQuery } from "@/Query/user.query";
+import Api from "@/api/api";
+import { TitleWithLine } from "@/components/ui/TitleWithLine";
 import { useTherapyStore } from "@/store/zustand";
-import { useRouter, usePathname } from "next/navigation";
-import { mockUsers } from "@/constants/mock";
-import { toPascalCase } from "@/utils/utils";
+import { TrashIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-export default function Appointments() {
+export default function Claims() {
   const router = useRouter();
+  const { user, setClaim, claim } = useTherapyStore();
+  const queryClient = useQueryClient();
   const pathname = usePathname();
 
-  const userRole = pathname.split("/")[2].toUpperCase();
-  const filteredUsers = mockUsers.filter((user) => user.role === userRole);
+  let userRole = pathname.split("/")[2].toUpperCase();
+  if (userRole === "THERAPY") {
+    userRole = "THERAPY_PROVIDER";
+  }
+  const { data: users = [], isLoading, error } = useUserListQuery(userRole);
 
-  const { setDoctor } = useTherapyStore();
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => Api.deleteClaimById(id),
+    onSuccess: () => {
+      toast.success("Deleted Successfully", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      queryClient.invalidateQueries({ queryKey: ["claimList"] });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+  });
 
-  const handleEdit = (user: any) => {
-    // setDoctor(user);
-    router.push("/therapy/user/update");
+  const handleEdit = (claim: any) => {
+    setClaim(claim);
+    console.log(claim);
+    router.push("/admin/claim/update");
   };
 
-  const handleDelete = (user: any) => {
-    console.log(user);
-  };
+  const handleDelete = (claim: any) => {
+    deleteMutation.mutate(claim.id);
 
-  const handleNewUserAdd = () => {
-    // setDoctor(null);
-    router.push("/therapy/user/add");
+    console.log(claim);
   };
-
   return (
     <>
-      <div className="flex justify-between align-m_iddle">
-        <div className="font-bold text-darkblue flex items-center">{toPascalCase(userRole)}</div>
-        <div className="w-48 text-sm text-white">
-          <Button text="Add User" onClick={handleNewUserAdd} />
-        </div>
-      </div>
+      <TitleWithLine title="Claims" />
       <table className="w-full text-left text-sm mt-2">
         <thead>
           <tr>
@@ -44,36 +61,43 @@ export default function Appointments() {
               Name
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Email
+              phone
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Phone
+              Email
             </th>
+
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Address
             </th>
-            <th className="border-b-2 border-gray-300 py-2 font-semibold">
+
+            {/* <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Actions
-            </th>
+            </th> */}
           </tr>
         </thead>
         <tbody>
-          {filteredUsers.map((user, index) => (
+          {users.map((user: any, index: number) => (
             <tr key={index}>
-              <td className="border-b border-gray-200 py-2">{user.name}</td>
+              <td className="border-b border-gray-200 py-2">
+                {user.firstName} {user.lastName}
+              </td>
+              <td className="border-b border-gray-200 py-2">
+                {user.contactNumber}
+              </td>
               <td className="border-b border-gray-200 py-2">{user.email}</td>
-              <td className="border-b border-gray-200 py-2">{user.phone}</td>
+
               <td className="border-b border-gray-200 py-2">{user.address}</td>
-              <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
+              {/* <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
                 <PencilSquareIcon
                   className="cursor-pointer"
-                  onClick={() => handleEdit(user)}
+                  // onClick={() => handleEdit(user)}
                 />
                 <TrashIcon
                   className="text-dangerRed cursor-pointer"
-                  onClick={() => handleDelete(user)}
+                  // onClick={() => handleDelete(user)}
                 />
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>

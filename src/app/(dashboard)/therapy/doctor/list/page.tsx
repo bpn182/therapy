@@ -3,51 +3,44 @@ import Button from "@/components/form/Button";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTherapyStore } from "@/store/zustand";
 import { useRouter } from "next/navigation";
-import { IDoctor } from "@/app/interfaces/doctor.interace";
-
-const doctors = [
-  {
-    _id: "1",
-    name: "Dr. Smith",
-    phone: "1234567890",
-    email: "doc1@gmail.com",
-    service: "Therapy",
-  },
-  {
-    _id: "2",
-    name: "Dr. Johnson",
-    phone: "1234567890",
-    email: "doc2@gmail.com",
-    service: "Accupuncture",
-  },
-  {
-    _id: "3",
-    name: "Dr. Williams",
-    phone: "1234567890",
-    email: "doc3@gmail.com",
-    service: "Therapy",
-  },
-  {
-    _id: "4",
-    name: "Dr. Davis",
-    phone: "1234567890",
-    email: "doc4@gmail.com",
-    service: "Accupuncture",
-  },
-];
+import { useDoctorListQuery } from "@/Query/doctor.query";
+import Api from "@/api/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 export default function Appointments() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { setDoctor } = useTherapyStore();
+  const { data = [], isLoading, error } = useDoctorListQuery();
 
-  const handleEdit = (doctor: IDoctor) => {
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => Api.deleteDoctorById(id),
+    onSuccess: () => {
+      toast.success("Deleted Successfully", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      queryClient.invalidateQueries({ queryKey: ["doctorList"] });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+  });
+
+  const handleEdit = (doctor: any) => {
     setDoctor(doctor);
     router.push("/therapy/doctor/update");
   };
 
-  const handleDelete = (doctor: IDoctor) => {
+  const handleDelete = (doctor: any) => {
     console.log(doctor);
+    deleteMutation.mutate(doctor.id);
   };
 
   const handleNewDoctorAdd = () => {
@@ -70,13 +63,16 @@ export default function Appointments() {
               Name
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Email
+              Service
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Phone
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Service
+              Specialization
+            </th>
+            <th className="border-b-2 border-gray-300 py-2 font-semibold">
+              PersonalBio
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Actions
@@ -84,13 +80,18 @@ export default function Appointments() {
           </tr>
         </thead>
         <tbody>
-          {doctors.map((doctor, index) => (
+          {data.map((doctor: any, index: number) => (
             <tr key={index}>
               <td className="border-b border-gray-200 py-2">{doctor.name}</td>
-              <td className="border-b border-gray-200 py-2">{doctor.email}</td>
+              <td className="border-b border-gray-200 py-2">
+                {doctor?.service?.name}
+              </td>
               <td className="border-b border-gray-200 py-2">{doctor.phone}</td>
               <td className="border-b border-gray-200 py-2">
-                {doctor.service}
+                {doctor.specialization}
+              </td>
+              <td className="border-b border-gray-200 py-2">
+                {doctor.personalBio}
               </td>
               <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
                 <PencilSquareIcon

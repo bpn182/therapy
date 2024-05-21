@@ -11,6 +11,7 @@ import {
   CalendarDaysIcon,
   DocumentIcon,
 } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
 
 const menuItems = [
   {
@@ -34,8 +35,14 @@ interface IUserLayoutProps {
   children: React.ReactNode;
 }
 export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
-  const { setClaim } = useTherapyStore();
+  const { setClaim, accessToken } = useTherapyStore();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!accessToken) {
+      router.push("/user/signin");
+    }
+  }, [accessToken, router]);
 
   const handleAddClaim = () => {
     setClaim(null);

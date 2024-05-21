@@ -1,38 +1,99 @@
 "use client";
-import { IClaim } from "@/app/interfaces/claim.interface";
+import { useInsuranceListQuery } from "@/Query/insurance.query";
+import { useServicesList } from "@/Query/service.query";
+import { useUserListQuery } from "@/Query/user.query";
+import Api from "@/api/api";
 import Button from "@/components/form/Button";
-import Loader from "@/components/ui/Loader";
 import { TitleWithLine } from "@/components/ui/TitleWithLine";
 import { useTherapyStore } from "@/store/zustand";
-import { PhotoIcon } from "@heroicons/react/24/outline";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function AddClaim() {
-  const { claim } = useTherapyStore();
-  const { register, handleSubmit, setValue } = useForm<IClaim>();
+  const { claim, user } = useTherapyStore();
+  const { register, handleSubmit, setValue } = useForm<any>();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const {
+    data: insurances = [],
+    isLoading: isInsuranceLoading,
+    error: insuranceErr,
+  } = useInsuranceListQuery();
+
+  const {
+    data: providers = [],
+    isLoading: isProviderLoading,
+    error: isProviderErr,
+  } = useUserListQuery("THERAPY_PROVIDER");
+
+  const {
+    data: services = [],
+    isLoading: isServiceLoading,
+    error: serviceErr,
+  } = useServicesList();
 
   useEffect(() => {
     if (claim) {
-      setValue("feedback", claim.feedback);
-      setValue("status", claim.status);
+      setValue("insuranceId", claim.insuranceId);
+      setValue("serviceId", claim.serviceId);
+      setValue("therapyProviderId", claim.therapyProviderId);
+      setValue("details", claim.details);
+      setValue("claimDetails", claim.claimDetails);
     }
   }, [claim, setValue]);
 
-  const onSubmit = (data: IClaim) => {
-    console.log("values", data);
+  const mutation = useMutation({
+    mutationFn: Api.addClaim,
+    onSuccess: () => {
+      successToast("Claim added successfully.");
+    },
+    onError: (error) => {
+      console.log(error);
+      showErrorToast("Error. Please try again!");
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (data) => Api.updateClaimById(claim.id, data),
+    onSuccess: () => {
+      successToast("Claim updated successfully.");
+    },
+    onError: (error) => {
+      console.log(error);
+      showErrorToast("Error. Please try again!");
+    },
+  });
+
+  const successToast = (msg: string) => {
+    toast.success(msg, {
+      position: "top-right",
+      autoClose: 3000,
+    });
+    queryClient.invalidateQueries({ queryKey: ["servicesList"] });
+    router.push("/admin/claim/list");
   };
 
-  const renderUserDetails = (title: string, value: string) => (
-    <div className="font-medium">
-      {title}: <span className="font-normal">{value}</span>
-    </div>
-  );
+  const showErrorToast = (msg: string) => {
+    toast.error(msg, {
+      position: "top-right",
+      autoClose: 3000,
+    });
+  };
 
-  if (!claim) {
-    return <Loader />;
-  }
+  const onSubmit = (data: any) => {
+    console.log("values", data);
+    if (claim && claim.id) {
+      updateMutation.mutate(data);
+    } else {
+      data.userId = user.id;
+      mutation.mutate(data);
+    }
+  };
 
   return (
     <>
@@ -40,38 +101,64 @@ export default function AddClaim() {
       <form className="mt-4 pb-8" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col md:flex-row mb-3">
           <div className="flex-1 space-y-2 md:mr-4">
-            {renderUserDetails("User", claim.user)}
-            {renderUserDetails("Therapy", claim.claimType)}
-            {renderUserDetails("Date", claim.date)}
-            <div className="font-medium flex flex-row items-center">
-              File:
-              {claim.file ? (
-                <PhotoIcon
-                  className="ml-2 w-8 h-8 cursor-pointer"
-                  onClick={() => window.open(claim.file, "_blank")}
-                />
-              ) : (
-                <span className="ml-2 font-normal">N/A</span>
-              )}
-            </div>
-            <div className="font-medium">Details:</div>
-            <div>{claim.claimDetails}</div>
+            {isInsuranceLoading ? (
+              <p>Loading...</p>
+            ) : insuranceErr ? (
+              <p>Error loading insurance</p>
+            ) : (
+              <select {...register("insuranceId")} className="custom-input">
+                <option value="">Select a Insurance</option>
+                {insurances.map((insurance: any) => (
+                  <option key={insurance.id} value={insurance.id}>
+                    {insurance.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            {isProviderLoading ? (
+              <p>Loading...</p>
+            ) : insuranceErr ? (
+              <p>Error loading provider</p>
+            ) : (
+              <select
+                {...register("therapyProviderId")}
+                className="custom-input"
+              >
+                <option value="">Select a Provider</option>
+                {providers.map((provider: any) => (
+                  <option key={provider.id} value={provider.id}>
+                    {provider.firstName} {provider.lastName} -{" "}
+                    {provider.address}
+                  </option>
+                ))}
+              </select>
+            )}
+            {/* <input
+              ref={fileInputRef}
+              className=""
+              type="file"
+              accept="image/*"
+            /> */}
           </div>
           <div className="flex-1 mt-4 md:mt-0">
-            <div className="font-medium">Status:</div>
-            <select
-              className="font-normal custom-input"
-              {...register("status")}
-            >
-              <option value="PENDING">Pending</option>
-              <option value="APPROVED">Approved</option>
-              <option value="REJECTED">Rejected</option>
-            </select>
-            <div className="font-medium mt-1">Feedback:</div>
+            {isServiceLoading ? (
+              <p>Loading...</p>
+            ) : serviceErr ? (
+              <p>Error loading service</p>
+            ) : (
+              <select {...register("serviceId")} className="custom-input">
+                <option value="">Select a service</option>
+                {services.map((service: any) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            )}
             <textarea
-              {...register("feedback")}
-              placeholder="Feedback"
-              className="custom-input"
+              {...register("details")}
+              placeholder="Details"
+              className="mt-2 custom-input"
             />
           </div>
         </div>

@@ -4,55 +4,49 @@ import Button from "@/components/form/Button";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTherapyStore } from "@/store/zustand";
 import { useRouter } from "next/navigation";
-
-const appointments = [
-  {
-    _id: "1",
-    customer: "Bipin Bhandari",
-    doctor: "Dr. Smith",
-    date: "2022-01-01",
-    time: "10:00 AM",
-    service: "Therapy",
-  },
-  {
-    _id: "2",
-    customer: "Kamala Khadka",
-    doctor: "Dr. Johnson",
-    date: "2022-01-02",
-    time: "2:00 PM",
-    service: "Therapy",
-  },
-  {
-    _id: "3",
-    customer: "Sudeep Sharma",
-    doctor: "Dr. Williams",
-    date: "2022-01-03",
-    time: "1:00 PM",
-    service: "Therapy",
-  },
-  {
-    _id: "4",
-    customer: "Sangharsha Chaulagain",
-    doctor: "Dr. Davis",
-    date: "2022-01-04",
-    time: "3:00 PM",
-    service: "Therapy",
-  },
-];
+import { useAppoinmentListQuery } from "@/Query/appointment.query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import Api from "@/api/api";
 
 export default function Appointments() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const { setAppointment } = useTherapyStore();
+  const { user, setAppointment } = useTherapyStore();
+  const {
+    data: appointments = [],
+    isLoading,
+    error,
+  } = useAppoinmentListQuery({ userId: user?.id });
 
-  const handleEdit = (appointment: IAppointment) => {
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => Api.deleteAppointmentById(id),
+    onSuccess: () => {
+      toast.success("Deleted Successfully", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      queryClient.invalidateQueries({ queryKey: ["appoinmentList"] });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+  });
+
+  const handleEdit = (appointment: any) => {
     setAppointment(appointment);
     console.log(appointment);
     router.push("/user/appointment/update");
   };
 
-  const handleDelete = (appointment: IAppointment) => {
+  const handleDelete = (appointment: any) => {
     console.log(appointment);
+    deleteMutation.mutate(appointment.id);
   };
 
   const handleNewAppointment = () => {
@@ -74,10 +68,10 @@ export default function Appointments() {
         <thead>
           <tr>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Customer
+              User
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Doctor
+              Service
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Appointment Date
@@ -91,13 +85,13 @@ export default function Appointments() {
           </tr>
         </thead>
         <tbody>
-          {appointments.map((appointment, index) => (
+          {appointments.map((appointment: any, index: number) => (
             <tr key={index}>
               <td className="border-b border-gray-200 py-2">
-                {appointment.customer}
+                {appointment.user.firstName} {appointment.user.lastName}
               </td>
               <td className="border-b border-gray-200 py-2">
-                {appointment.doctor}
+                {appointment.service.name}
               </td>
               <td className="border-b border-gray-200 py-2">
                 {appointment.date}

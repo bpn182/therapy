@@ -1,4 +1,6 @@
 "use client";
+import { useInsuranceListQuery } from "@/Query/insurance.query";
+import { useUserListQuery } from "@/Query/user.query";
 import { mockUsers } from "@/constants/mock";
 import React from "react";
 import {
@@ -15,13 +17,20 @@ import {
 } from "recharts";
 
 export default function AdminPage() {
+  const { data: users = [] } = useUserListQuery("USER");
+  const { data: providers = [] } = useUserListQuery("THERAPY_PROVIDER");
+  const { data: insurances = [] } = useInsuranceListQuery();
+
   const roles = mockUsers.reduce((acc: any, user: any) => {
     acc[user.role] = (acc[user.role] || 0) + 1;
     return acc;
   }, {});
 
-  const data = Object.entries(roles).map(([name, value]) => ({ name, value }));
-  const COLORS = ["#FF6384", "#36A2EB", "#FFCE56"];
+  const data = [
+    { name: 'Users', value: users.length },
+    { name: 'Providers', value: providers.length },
+    { name: 'Insurances', value: insurances.length },
+  ];  const COLORS = ["#FF6384", "#36A2EB", "#FFCE56"];
 
   const options: any = {
     plugins: {
@@ -42,7 +51,7 @@ export default function AdminPage() {
     },
     {
       name: "Month 3",
-      approvedClaims:4,
+      approvedClaims: 4,
     },
     {
       name: "Month 2",

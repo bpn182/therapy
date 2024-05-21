@@ -8,6 +8,9 @@ import {
   DocumentIcon,
 } from "@heroicons/react/24/outline";
 import StatCard from "@/components/card/statCard";
+import { useUserListQuery } from "@/Query/user.query";
+import { useInsuranceListQuery } from "@/Query/insurance.query";
+import { useClaimListQuery } from "@/Query/claim.query";
 
 const menuItems = [
   {
@@ -41,6 +44,10 @@ interface IUserLayoutProps {
   children: React.ReactNode;
 }
 export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
+  const { data: users = [] } = useUserListQuery("USER");
+  const { data: providers = [] } = useUserListQuery("THERAPY_PROVIDER");
+  const { data: insuraces = [] } = useInsuranceListQuery();
+  const { data: claims = [] } = useClaimListQuery({});
   return (
     <>
       <NavBar userType="user" />
@@ -52,7 +59,7 @@ export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
             <div className="flex gap-x-4 h-30  text-white">
               <StatCard
                 text="Users"
-                count={4}
+                count={users.length || 0}
                 link="/admin/user/list"
                 icon={<UserIcon className="w-6 h-6" />}
               />
@@ -60,14 +67,14 @@ export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
               <StatCard
                 className=" bg-darkblueshade"
                 text="Therapies"
-                count={6}
+                count={providers.length || 0}
                 link="/admin/therapy/list"
                 icon={<HomeIcon className="w-6 h-6" />}
               />
 
               <StatCard
                 text="Insurances"
-                count={5}
+                count={insuraces.length || 0}
                 link="/admin/insurance/list"
                 icon={<BuildingOffice2Icon className="w-6 h-6" />}
               />
@@ -75,7 +82,7 @@ export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
               <StatCard
                 className=" bg-darkblueshade"
                 text="Claims"
-                count={4}
+                count={claims.length || 0}
                 link="/admin/claim/list"
                 icon={<DocumentIcon className="w-6 h-6" />}
               />

@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URL")
+}
+
+enum Role {
+  ADMIN
+  THERAPY_PROVIDER
+  USER
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REQUIRES_ACTION
+}
+
+model User {
+  id                      String        @id @default(auto()) @map("_id") @db.ObjectId
+  firstName               String
+  lastName                String
+  dateOfBirth             DateTime?
+  email                   String        @unique
+  password                String
+  contactNumber           String
+  address                 String
+  role                    Role
+  Appointment             Appointment[]
+  userClaims              Claim[]       @relation("UserClaims")
+  therapyProviderClaims   Claim[]       @relation("TherapyProviderClaims")
+  therapyProviderServices Service[]     @relation("TherapyProviderServices")
+  doctors                 Doctor[]      @relation("TherapyDoctors")
+}
+
+model Service {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  price       String
+  providerId  String        @db.ObjectId
+  provider    User          @relation("TherapyProviderServices", fields: [providerId], references: [id])
+  Appointment Appointment[]
+  doctors     Doctor[]
+  Claim       Claim[]
+}
+
+model Doctor {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  specialization String
+  personalBio    String
+  phone          String
+  serviceId      String  @db.ObjectId
+  service        Service @relation(fields: [serviceId], references: [id]) // One doctor can have only one service
+  providerId     String  @db.ObjectId
+  provider       User    @relation("TherapyDoctors", fields: [providerId], references: [id]) // One doctor can belong to only one user
+}
+
+model Appointment {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  therapyProviderId String  @db.ObjectId
+  user              User    @relation(fields: [userId], references: [id])
+  userId            String  @db.ObjectId
+  date              String
+  time              String
+  serviceId         String  @db.ObjectId
+  service           Service @relation(fields: [serviceId], references: [id])
+}
+
+model Insurance {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  Claim       Claim[]
+}
+
+model Claim {
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  therapyProviderId String      @db.ObjectId
+  therapyProvider   User        @relation(name: "TherapyProviderClaims", fields: [therapyProviderId], references: [id])
+  insuranceId       String      @db.ObjectId
+  insurance         Insurance   @relation(fields: [insuranceId], references: [id])
+  user              User        @relation(name: "UserClaims", fields: [userId], references: [id])
+  userId            String      @db.ObjectId
+  service           Service     @relation(fields: [serviceId], references: [id])
+  serviceId         String      @db.ObjectId
+  details           String
+  status            ClaimStatus @default(PENDING)
+}

@@ -7,6 +7,7 @@ interface IMenuItem {
   href: string;
   icon: ReactNode;
   disabled: boolean;
+  onClick?: () => void;
 }
 
 interface IDropdownProps {
@@ -48,8 +49,8 @@ const Dropdown: FC<IDropdownProps> = ({ menuItems }) => {
             {menuItems.map((item: IMenuItem) => (
               <Menu.Item key={item.href}>
                 {({ active }) => (
-                  <Link
-                    href={item.href}
+                  <div
+                    onClick={item.onClick}
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm font-medium cursor-pointer"
@@ -59,7 +60,7 @@ const Dropdown: FC<IDropdownProps> = ({ menuItems }) => {
                       {item.icon}
                       {item.name}
                     </div>
-                  </Link>
+                  </div>
                 )}
               </Menu.Item>
             ))}

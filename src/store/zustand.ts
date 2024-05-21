@@ -3,16 +3,21 @@ import { IClaim } from "@/app/interfaces/claim.interface";
 import { IDoctor } from "@/app/interfaces/doctor.interace";
 import { IService } from "@/app/interfaces/services.interface";
 import { create } from "zustand";
+import { getItemFromLocalStorage, setItemInLocalStorage } from "./localStorage";
 
 export interface IStore {
-  appointment: IAppointment | null;
-  setAppointment: (appointment: IAppointment | null) => void;
-  claim: IClaim | null;
-  setClaim: (appointment: IClaim | null) => void;
-  doctor: IDoctor | null;
-  setDoctor: (doctor: IDoctor | null) => void;
-  service: IService | null;
-  setService: (service: IService | null) => void;
+  appointment: any;
+  setAppointment: (appointment: any) => void;
+  claim: any;
+  setClaim: (appointment: any) => void;
+  doctor: any;
+  setDoctor: (doctor: any) => void;
+  service: any | null;
+  setService: (service: any | null) => void;
+  accessToken: string | null;
+  setAccessToken: (accessToken: string | null) => void;
+  user: any;
+  setUser: (user: any) => void;
 }
 
 export const useTherapyStore = create<IStore>((set) => ({
@@ -24,4 +29,21 @@ export const useTherapyStore = create<IStore>((set) => ({
   setDoctor: (doctor) => set({ doctor }),
   service: null,
   setService: (service) => set({ service }),
+  accessToken: getItemFromLocalStorage("accessToken"),
+  setAccessToken: (accessToken) => {
+    setItemInLocalStorage("accessToken", accessToken);
+    set({ accessToken });
+  },
+  user: getItemFromLocalStorage("user")
+    ? JSON.parse(String(getItemFromLocalStorage("user")))
+    : null,
+  setUser: (user) => {
+    console.log("user", user);
+    if (user) {
+      setItemInLocalStorage("user", JSON.stringify(user));
+    } else {
+      setItemInLocalStorage("user", null);
+    }
+    set({ user });
+  },
 }));

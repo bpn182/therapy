@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { insurancePathConfig } from "@/constants/insurance.constants";
 import { HomeIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import TherapyServiceStat from "../_components/TherapyServiceStat";
+import { useClaimListQuery } from "@/Query/claim.query";
+import { useTherapyStore } from "@/store/zustand";
 
 const menuItems = [
   {
@@ -16,10 +18,7 @@ const menuItems = [
   {
     text: "Claims",
     icon: <DocumentIcon />,
-    href: [
-      "/insurance/claim/list",
-      "/insurance/claim/update",
-    ],
+    href: ["/insurance/claim/list", "/insurance/claim/update"],
   },
 ];
 
@@ -28,7 +27,9 @@ interface IUserLayoutProps {
 }
 export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
   const router = useRouter();
+  const { user } = useTherapyStore();
 
+  const { data: claims = [] } = useClaimListQuery({ userId: user?.id });
   return (
     <>
       <NavBar userType="user" />

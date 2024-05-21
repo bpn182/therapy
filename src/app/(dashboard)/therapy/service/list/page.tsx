@@ -3,49 +3,44 @@ import Button from "@/components/form/Button";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTherapyStore } from "@/store/zustand";
 import { useRouter } from "next/navigation";
-import { IService } from "@/app/interfaces/services.interface";
-
-const services = [
-  {
-    _id: "1",
-    name: "Therapy",
-    description:
-      "Therapy is  intended to relieve or heal a stress and anxiety.",
-    price: "$100",
-  },
-  {
-    _id: "2",
-    name: "Accupuncture",
-    description: "Accupuncture is a form of alternative medicine.",
-    price: "$200",
-  },
-  {
-    _id: "3",
-    name: "Chiropractic",
-    description: "Chiropractic is a form of alternative medicine.",
-    price: "$110",
-  },
-  {
-    _id: "4",
-    name: "Physiotherapy",
-    description:
-      "Physiotherapy is a health care profession that aims to help patients.",
-    price: "$90",
-  },
-];
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Api from "@/api/api";
+import { toast, ToastContainer } from "react-toastify";
+import { useServicesList } from "@/Query/service.query";
 
 export default function Services() {
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const { setService } = useTherapyStore();
 
-  const handleEdit = (service: IService) => {
+  const { data = [], isLoading, error } = useServicesList();
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => Api.deleteServiceById(id),
+    onSuccess: () => {
+      toast.success("Deleted Successfully", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      queryClient.invalidateQueries({ queryKey: ["servicesList"] });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+  });
+
+  const handleEdit = (service: any) => {
     setService(service);
     router.push("/therapy/service/update");
   };
 
-  const handleDelete = (service: IService) => {
+  const handleDelete = (service: any) => {
     console.log(service);
+    deleteMutation.mutate(service.id);
   };
 
   const handleNewServiceAdd = () => {
@@ -55,6 +50,7 @@ export default function Services() {
 
   return (
     <>
+      <ToastContainer />
       <div className="flex justify-between align-m_iddle">
         <div className="font-bold text-darkblue flex items-center">
           Services
@@ -81,7 +77,7 @@ export default function Services() {
           </tr>
         </thead>
         <tbody>
-          {services.map((service, index) => (
+          {data?.map((service: any, index: number) => (
             <tr key={index}>
               <td className="border-b border-gray-200 py-2">{service.name}</td>
               <td className="border-b border-gray-200 py-2">

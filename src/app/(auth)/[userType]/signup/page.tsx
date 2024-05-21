@@ -20,33 +20,35 @@ export default function SignUp({ params }: { params: { userType: string } }) {
   const mutation = useMutation({
     mutationFn: Api.registerUser,
     onSuccess: () => {
-      // router.push(`/${userType}/signin`);
-      toast.success("Success Notification !", {
+      toast.success("User Registered Successfully.", {
         position: "top-right",
+        autoClose: 3000,
       });
+      navigateToLogin();
     },
     onError: (error) => {
       console.log(error);
-      toast.error("An error occurred", {
+      toast.error("Error. Please try again!", {
         position: "top-right",
+        autoClose: 3000,
       });
     },
   });
 
   const onSubmit = (data: any) => {
-    // data.role = "ADMIN";
-    // data.firstName = "Bipin";
-    // data.lastName = "Bhandari";
-    console.log("data before", data);
+    data.role = userType.toUpperCase();
+    if (data.role === "THERAPY") {
+      data.role = "THERAPY_PROVIDER";
+    }
     mutation.mutate(data);
   };
 
   const navigateToLogin = () => {
     router.push(`/${userType}/signin`);
   };
+
   return (
     <div>
-      <ToastContainer />
       <div className="text-center w-96 mx-auto bg-white px-8 py-8 rounded-2xl shadow-lg">
         <div>
           To get started
@@ -54,10 +56,16 @@ export default function SignUp({ params }: { params: { userType: string } }) {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3  pt-2">
           <input
-            {...register("name")}
+            {...register("firstName")}
             className="custom-input"
             type="text"
-            placeholder="Name"
+            placeholder="First Name"
+          />
+          <input
+            {...register("lastName")}
+            className="custom-input"
+            type="text"
+            placeholder="Last Name"
           />
           <input
             {...register("email")}
@@ -66,10 +74,10 @@ export default function SignUp({ params }: { params: { userType: string } }) {
             placeholder="Email"
           />
           <input
-            {...register("phone")}
+            {...register("contactNumber")}
             className="custom-input"
             type="text"
-            placeholder="Phone"
+            placeholder="Phone Number"
           />
           <input
             {...register("address")}

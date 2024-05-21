@@ -11,3 +11,9 @@ export interface IMenuItem {
   icon: JSX.Element;
   href: string[];
 }
+
+export interface IParams {
+  params: {
+    _id: string;
+  };
+}

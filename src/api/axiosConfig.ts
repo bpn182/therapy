@@ -1,15 +1,20 @@
+import { getItemFromLocalStorage } from "@/store/localStorage";
 import axios, { AxiosError, AxiosInstance } from "axios";
 
 // Axios Configuration
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: "https://api-gateway.csangharsha.com.np",
+  baseURL: "/api",
   timeout: 100000,
 });
 
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   async (config) => {
+    const token = getItemFromLocalStorage("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error: AxiosError): Promise<never> => {

@@ -7,6 +7,9 @@ import {
   ArrowLeftEndOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useTherapyStore } from "@/store/zustand";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface INavBarProps {
   userType?: string;
@@ -15,6 +18,23 @@ interface INavBarProps {
 const IconCss = "h-5 w-5 mr-4 text-customGreen font-bold";
 
 const NavBar: React.FC<INavBarProps> = ({ userType }) => {
+  const router = useRouter();
+  const { user = {}, setUser, setAccessToken } = useTherapyStore();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // When the user object is available, set isLoading to false
+    if (user) {
+      setIsLoading(false);
+    }
+  }, [user]);
+
+  const logoutUser = () => {
+    setAccessToken(null);
+    setUser(null);
+    router.push(`/${userType}/signin`);
+  };
+
   const menuItems = [
     {
       name: "Account settings",
@@ -25,6 +45,7 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
     {
       name: "Sign out",
       href: `/${userType}/signin`,
+      onClick: logoutUser,
       icon: <ArrowLeftEndOnRectangleIcon className={IconCss} />,
       disabled: false,
     },
@@ -49,7 +70,9 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
           layout="cover"
         />
         <div className="flex flex-col">
-          <div className="font-semibold text-sm">Bipin Bhandari</div>
+          <div className="font-semibold text-sm">
+            {isLoading ? "Loading..." : user?.firstName + " " + user?.lastName}
+          </div>
           <div className="text-xs itallic">Account Settings</div>
         </div>
         <Dropdown menuItems={menuItems} />

@@ -1,24 +1,53 @@
 "use client";
+import { useClaimListQuery } from "@/Query/claim.query";
+import Api from "@/api/api";
 import { IClaim } from "@/app/interfaces/claim.interface";
 import { TitleWithLine } from "@/components/ui/TitleWithLine";
-import { mockClaims } from "@/constants/mock";
 import { useTherapyStore } from "@/store/zustand";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-
+import { toast } from "react-toastify";
 
 export default function Claims() {
   const router = useRouter();
-  const { setClaim } = useTherapyStore();
+  const { user, setClaim, claim } = useTherapyStore();
+  const queryClient = useQueryClient();
 
-  const handleEdit = (claim: IClaim) => {
+  const {
+    data: claims = [],
+    isLoading,
+    error,
+  } = useClaimListQuery({ userId: user?.id });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => Api.deleteClaimById(id),
+    onSuccess: () => {
+      toast.success("Deleted Successfully", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      queryClient.invalidateQueries({ queryKey: ["claimList"] });
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Error. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+  });
+
+  const handleEdit = (claim: any) => {
     setClaim(claim);
     console.log(claim);
     router.push("/user/claim/update");
   };
 
-  const handleDelete = (claim: IClaim) => {
+  const handleDelete = (claim: any) => {
+    deleteMutation.mutate(claim.id);
+
     console.log(claim);
   };
   return (
@@ -31,13 +60,14 @@ export default function Claims() {
               Insurance Provider
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Type
+              Therapy Provider
             </th>
+            <th className="border-b-2 border-gray-300 py-2 font-semibold">
+              Service
+            </th>
+
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Details
-            </th>
-            <th className="border-b-2 border-gray-300 py-2 font-semibold">
-              Date
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Status
@@ -48,19 +78,20 @@ export default function Claims() {
           </tr>
         </thead>
         <tbody>
-          {mockClaims.map((claim, index) => (
+          {claims.map((claim: any, index: number) => (
             <tr key={index}>
               <td className="border-b border-gray-200 py-2">
-                {claim.insuranceProvider}
+                {claim?.insurance?.name}
               </td>
               <td className="border-b border-gray-200 py-2">
-                {claim.claimType}
+                {claim?.therapyProvider?.firstName}{" "}
+                {claim?.therapyProvider?.lastName}
               </td>
               <td className="border-b border-gray-200 py-2">
-                {claim.claimDetails}
+                {claim?.service?.name}
               </td>
 
-              <td className="border-b border-gray-200 py-2">{claim.date}</td>
+              <td className="border-b border-gray-200 py-2">{claim.details}</td>
               <td className="border-b border-gray-200 py-2">{claim.status}</td>
               <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
                 <PencilSquareIcon
