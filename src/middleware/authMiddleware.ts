@@ -11,6 +11,7 @@ export const authMiddleware = (req: any) => {
   const secret = process.env.JWT_SECRET as string;
 
   if (!secret) {
+    
     throw new Error("Invalid token");
   }
 
