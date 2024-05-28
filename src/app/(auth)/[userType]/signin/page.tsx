@@ -53,8 +53,12 @@ export default function SignIn({ params }: { params: { userType: string } }) {
   };
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    mutation.mutate(data);
+    if (userRole === "INSURANCE") {
+      router.push(`/insurance`);
+    } else {
+      console.log(data);
+      mutation.mutate(data);
+    }
   };
 
   const navigateToDashboard = (data: any) => {
@@ -74,7 +78,6 @@ export default function SignIn({ params }: { params: { userType: string } }) {
 
   return (
     <div>
-      <ToastContainer />
       <div className="text-center w-96 mx-auto bg-white px-8 py-8 rounded-2xl shadow-lg">
         <div>
           Please <span className="font-bold ">Sign in</span>

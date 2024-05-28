@@ -6,6 +6,7 @@ import Api from "@/api/api";
 import Button from "@/components/form/Button";
 import { TitleWithLine } from "@/components/ui/TitleWithLine";
 import { useTherapyStore } from "@/store/zustand";
+import { Claim, User } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -18,12 +19,6 @@ export default function AddClaim() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const router = useRouter();
-
-  const {
-    data: insurances = [],
-    isLoading: isInsuranceLoading,
-    error: insuranceErr,
-  } = useInsuranceListQuery();
 
   const {
     data: providers = [],
@@ -39,7 +34,7 @@ export default function AddClaim() {
 
   useEffect(() => {
     if (claim) {
-      setValue("insuranceId", claim.insuranceId);
+      setValue("insuranceId", claim?.insurance?.name);
       setValue("serviceId", claim.serviceId);
       setValue("therapyProviderId", claim.therapyProviderId);
       setValue("details", claim.details);
@@ -59,7 +54,7 @@ export default function AddClaim() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data) => Api.updateClaimById(claim.id, data),
+    mutationFn: (data: Claim) => Api.updateClaimById(claim.id, data),
     onSuccess: () => {
       successToast("Claim updated successfully.");
     },
@@ -85,12 +80,15 @@ export default function AddClaim() {
     });
   };
 
-  const onSubmit = (data: any) => {
-    console.log("values", data);
+  const onSubmit = (data: Claim) => {
     if (claim && claim.id) {
+      data.insuranceId = claim.insuranceId;
+
       updateMutation.mutate(data);
     } else {
       data.userId = user.id;
+      data.insuranceId = user.insuranceId;
+
       mutation.mutate(data);
     }
   };
@@ -101,23 +99,17 @@ export default function AddClaim() {
       <form className="mt-4 pb-8" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col md:flex-row mb-3">
           <div className="flex-1 space-y-2 md:mr-4">
-            {isInsuranceLoading ? (
-              <p>Loading...</p>
-            ) : insuranceErr ? (
-              <p>Error loading insurance</p>
-            ) : (
-              <select {...register("insuranceId")} className="custom-input">
-                <option value="">Select a Insurance</option>
-                {insurances.map((insurance: any) => (
-                  <option key={insurance.id} value={insurance.id}>
-                    {insurance.name}
-                  </option>
-                ))}
-              </select>
-            )}
+            <input
+              readOnly
+              {...register("insuranceId")}
+              type="text"
+              placeholder="Insurance"
+              className="h-10 bg-gray-200 w-full rounded-md px-2"
+              defaultValue={user?.insurance.name}
+            />
             {isProviderLoading ? (
               <p>Loading...</p>
-            ) : insuranceErr ? (
+            ) : isProviderErr ? (
               <p>Error loading provider</p>
             ) : (
               <select
@@ -125,7 +117,7 @@ export default function AddClaim() {
                 className="custom-input"
               >
                 <option value="">Select a Provider</option>
-                {providers.map((provider: any) => (
+                {providers.map((provider: User) => (
                   <option key={provider.id} value={provider.id}>
                     {provider.firstName} {provider.lastName} -{" "}
                     {provider.address}

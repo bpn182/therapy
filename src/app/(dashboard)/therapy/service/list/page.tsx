@@ -50,7 +50,6 @@ export default function Services() {
 
   return (
     <>
-      <ToastContainer />
       <div className="flex justify-between align-m_iddle">
         <div className="font-bold text-darkblue flex items-center">
           Services

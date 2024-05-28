@@ -7,13 +7,16 @@ import { useTherapyStore } from "@/store/zustand";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function Claims() {
   const router = useRouter();
   const { user, setClaim, claim } = useTherapyStore();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
+  let userRole = pathname.split("/")[1];
+
 
   const {
     data: claims = [],
@@ -41,8 +44,7 @@ export default function Claims() {
 
   const handleEdit = (claim: any) => {
     setClaim(claim);
-    console.log(claim);
-    router.push("/user/claim/update");
+    router.push(`/${userRole}/claim/update`);
   };
 
   const handleDelete = (claim: any) => {
@@ -98,10 +100,12 @@ export default function Claims() {
                   className="cursor-pointer"
                   onClick={() => handleEdit(claim)}
                 />
-                <TrashIcon
-                  className="text-dangerRed cursor-pointer"
-                  onClick={() => handleDelete(claim)}
-                />
+                {userRole === "user" ? null : (
+                  <TrashIcon
+                    className="text-dangerRed cursor-pointer"
+                    onClick={() => handleDelete(claim)}
+                  />
+                )}
               </td>
             </tr>
           ))}

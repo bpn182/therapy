@@ -29,9 +29,9 @@ export default function Home() {
           <Link href="/admin/signin" className="w-48 ">
             <Button text="Admin" />
           </Link>
-          {/* <Link href="/insurance/signin" className="w-48 ">
+          <Link href="/insurance/signin" className="w-48 ">
             <Button text="Insurance " />
-          </Link> */}
+          </Link>
         </div>
       </div>
     </main>

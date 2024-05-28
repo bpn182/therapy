@@ -26,6 +26,11 @@ enum ClaimStatus {
   REQUIRES_ACTION
 }
 
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+}
+
 model User {
   id                      String        @id @default(auto()) @map("_id") @db.ObjectId
   firstName               String
@@ -41,6 +46,8 @@ model User {
   therapyProviderClaims   Claim[]       @relation("TherapyProviderClaims")
   therapyProviderServices Service[]     @relation("TherapyProviderServices")
   doctors                 Doctor[]      @relation("TherapyDoctors")
+  insuranceId             String?       @db.ObjectId
+  insurance               Insurance?    @relation(fields: [insuranceId], references: [id])
 }
 
 model Service {
@@ -68,14 +75,15 @@ model Doctor {
 }
 
 model Appointment {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  therapyProviderId String  @db.ObjectId
-  user              User    @relation(fields: [userId], references: [id])
-  userId            String  @db.ObjectId
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  therapyProviderId String            @db.ObjectId
+  user              User              @relation(fields: [userId], references: [id])
+  userId            String            @db.ObjectId
   date              String
-  time              String
-  serviceId         String  @db.ObjectId
-  service           Service @relation(fields: [serviceId], references: [id])
+  time              String?
+  serviceId         String            @db.ObjectId
+  service           Service           @relation(fields: [serviceId], references: [id])
+  status            AppointmentStatus @default(PENDING)
 }
 
 model Insurance {
@@ -83,6 +91,7 @@ model Insurance {
   name        String
   description String
   Claim       Claim[]
+  User        User[]
 }
 
 model Claim {

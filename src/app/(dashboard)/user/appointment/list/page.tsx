@@ -3,7 +3,7 @@ import { IAppointment } from "@/app/interfaces/appointment.interface";
 import Button from "@/components/form/Button";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTherapyStore } from "@/store/zustand";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppoinmentListQuery } from "@/Query/appointment.query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -12,6 +12,8 @@ import Api from "@/api/api";
 export default function Appointments() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
+  let userRole = pathname.split("/")[1];
 
   const { user, setAppointment } = useTherapyStore();
   const {
@@ -41,7 +43,7 @@ export default function Appointments() {
   const handleEdit = (appointment: any) => {
     setAppointment(appointment);
     console.log(appointment);
-    router.push("/user/appointment/update");
+    router.push(`/${userRole}/appointment/update`);
   };
 
   const handleDelete = (appointment: any) => {
@@ -51,7 +53,7 @@ export default function Appointments() {
 
   const handleNewAppointment = () => {
     setAppointment(null);
-    router.push("/user/appointment/add");
+    router.push(`/${userRole}/appointment/add`);
   };
 
   return (
@@ -104,10 +106,12 @@ export default function Appointments() {
                   className="cursor-pointer"
                   onClick={() => handleEdit(appointment)}
                 />
-                <TrashIcon
-                  className="text-dangerRed cursor-pointer"
-                  onClick={() => handleDelete(appointment)}
-                />
+                {userRole === "user" ? null : (
+                  <TrashIcon
+                    className="text-dangerRed cursor-pointer"
+                    onClick={() => handleDelete(appointment)}
+                  />
+                )}
               </td>
             </tr>
           ))}

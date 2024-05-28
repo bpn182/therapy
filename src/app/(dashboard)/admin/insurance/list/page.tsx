@@ -1,10 +1,6 @@
 "use client";
-import { IAppointment } from "@/app/interfaces/appointment.interface";
-import Button from "@/components/form/Button";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTherapyStore } from "@/store/zustand";
 import { useRouter } from "next/navigation";
-import { useAppoinmentListQuery } from "@/Query/appointment.query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Api from "@/api/api";

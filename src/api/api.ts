@@ -26,6 +26,11 @@ class API {
     return response.data;
   };
 
+  public updateUserById = async (id: string, data: any) => {
+    const response = await this.api.put(`/user/${id}`, data);
+    return response.data;
+  };
+
   // Therapy Services
   public addService = async (service: any) => {
     const response = await this.api.post(`/therapy/service`, service);

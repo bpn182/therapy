@@ -35,10 +35,15 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
     router.push(`/${userType}/signin`);
   };
 
+  const onClickAccountSettings = () => {
+    router.push(`/${userType}/account-settings`);
+  };
+
   const menuItems = [
     {
       name: "Account settings",
-      href: `/${userType}`,
+      href: `/${userType}/account-settings`,
+      onClick: onClickAccountSettings,
       icon: <HomeIcon className={"h-5 w-5 mr-4 text-customGreen font-bold"} />,
       disabled: true,
     },

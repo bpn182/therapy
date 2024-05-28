@@ -5,19 +5,22 @@ import Button from "@/components/form/Button";
 import { TitleWithLine } from "@/components/ui/TitleWithLine";
 import { useTherapyStore } from "@/store/zustand";
 import { generateTimes } from "@/utils/utils";
+import { AppointmentStatus } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const CreateAppointment = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
   const { user, appointment } = useTherapyStore();
   const { register, handleSubmit, setValue } = useForm<any>();
   const { data = [], isLoading, error } = useServicesList();
 
+  console.log("pathname", pathname);
   useEffect(() => {
     console.log("setting values", appointment);
     if (appointment) {
@@ -64,7 +67,7 @@ const CreateAppointment = () => {
       autoClose: 3000,
     });
   };
-  
+
   const onSubmit = (formData: any) => {
     const [selectedService = {}] = data.filter(
       (service: any) => service.id === formData.serviceId
@@ -77,6 +80,7 @@ const CreateAppointment = () => {
       updateMutation.mutate(formData);
     } else {
       formData.userId = user.id;
+      formData.status = AppointmentStatus.PENDING;
       mutation.mutate(formData);
     }
   };
@@ -111,7 +115,7 @@ const CreateAppointment = () => {
               defaultValue={appointment?.date}
             />
           </div>
-          <div className="flex-1 mt-4 md:mt-0">
+          {/* <div className="flex-1 mt-4 md:mt-0">
             <select {...register("time")} className="custom-input">
               <option value="">Select a time</option>
               {generateTimes().map((hour: any) => (
@@ -120,7 +124,7 @@ const CreateAppointment = () => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
         </div>
         <Button
           type="submit"

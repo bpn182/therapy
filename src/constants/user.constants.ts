@@ -30,4 +30,8 @@ export const userPathConfig: IPathConfig = {
     mainText: "Update ",
     highlightText: "Appointment",
   },
+  "/user/account-settings": {
+    mainText: "Account ",
+    highlightText: "Settings",
+  },
 };
