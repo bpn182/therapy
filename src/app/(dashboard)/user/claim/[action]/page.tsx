@@ -1,5 +1,4 @@
 "use client";
-import { useInsuranceListQuery } from "@/Query/insurance.query";
 import { useServicesList } from "@/Query/service.query";
 import { useUserListQuery } from "@/Query/user.query";
 import Api from "@/api/api";
@@ -105,8 +104,13 @@ export default function AddClaim() {
               type="text"
               placeholder="Insurance"
               className="h-10 bg-gray-200 w-full rounded-md px-2"
-              defaultValue={user?.insurance.name}
+              defaultValue={user?.insurance?.name}
             />
+            {!user?.insurance?.name && (
+              <div className="text-red-500 mt-2">
+                Please select insurance from account settings.
+              </div>
+            )}
             {isProviderLoading ? (
               <p>Loading...</p>
             ) : isProviderErr ? (
@@ -159,6 +163,7 @@ export default function AddClaim() {
             type="submit"
             text={claim ? "Update" : "Submit"}
             className="w-36"
+            disabled={!user?.insurance?.name}
           />
         </div>
       </form>

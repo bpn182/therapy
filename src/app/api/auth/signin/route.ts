@@ -12,6 +12,9 @@ export async function POST(request: NextRequest) {
       where: {
         email,
       },
+      include: {
+        insurance: true,
+      },
     });
 
     // If no user is found, return an error
