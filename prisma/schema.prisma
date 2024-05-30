@@ -69,7 +69,7 @@ model Doctor {
   personalBio    String
   phone          String
   serviceId      String  @db.ObjectId
-  service        Service @relation(fields: [serviceId], references: [id]) // One doctor can have only one service
+  service        Service @relation(fields: [serviceId], references: [id], onDelete: Cascade) // One doctor can have only one service
   providerId     String  @db.ObjectId
   provider       User    @relation("TherapyDoctors", fields: [providerId], references: [id]) // One doctor can belong to only one user
 }
@@ -82,7 +82,7 @@ model Appointment {
   date              String
   time              String?
   serviceId         String            @db.ObjectId
-  service           Service           @relation(fields: [serviceId], references: [id])
+  service           Service           @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   status            AppointmentStatus @default(PENDING)
 }
 
