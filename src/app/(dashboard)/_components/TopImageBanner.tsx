@@ -1,6 +1,7 @@
 "use client";
 
 import { IPathConfig } from "@/app/interfaces/index.interface";
+import { useTherapyStore } from "@/store/zustand";
 import { usePathname } from "next/navigation";
 
 interface ITopImageBannerProps {
@@ -9,8 +10,17 @@ interface ITopImageBannerProps {
 
 const TopImageBanner: React.FC<ITopImageBannerProps> = ({ pathConfig }) => {
   const pathname = usePathname();
+  const { user } = useTherapyStore();
 
   const { mainText, highlightText, subText } = pathConfig[pathname] || {};
+  console.log("pathname", pathname);
+
+  const getHighlightText = () => {
+    if (pathname === "/therapy" || pathname === "/user") {
+      return user?.firstName;
+    }
+    return highlightText;
+  };
 
   return (
     <div className="rounded-xl overflow-hidden bg-dashboard-top-image bg-cover bg-center w-4/5 flex flex-col justify-center pl-8 ">
@@ -18,7 +28,7 @@ const TopImageBanner: React.FC<ITopImageBannerProps> = ({ pathConfig }) => {
         {mainText && (
           <>
             {mainText}
-            <span className="text-customGreen">{highlightText}</span>
+            <span className="text-customGreen">{getHighlightText()}</span>
           </>
         )}
       </div>

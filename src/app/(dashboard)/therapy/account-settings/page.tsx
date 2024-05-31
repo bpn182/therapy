@@ -14,8 +14,6 @@ export default function Page() {
   const { user, setUser } = useTherapyStore();
   const { register, handleSubmit, setValue } = useForm<User>();
 
-  const { data: insurances = [], isLoading, error } = useInsuranceListQuery();
-
   useEffect(() => {
     if (user) {
       setValue("insuranceId", user.insuranceId);
@@ -77,20 +75,12 @@ export default function Page() {
               className="h-10 bg-gray-200 w-full rounded-md px-2"
               defaultValue={user?.contactNumber}
             />
-            {isLoading ? (
-              <p>Loading...</p>
-            ) : error ? (
-              <p>Error loading services</p>
-            ) : (
-              <select {...register("insuranceId")} className="custom-input">
-                <option value="">Select a insurance</option>
-                {insurances.map((insurance: Insurance) => (
-                  <option key={insurance.id} value={insurance.id}>
-                    {insurance.name}
-                  </option>
-                ))}
-              </select>
-            )}
+            <input
+              {...register("password")}
+              type="password"
+              placeholder="Enter password"
+              className="h-10 bg-gray-200 w-full rounded-md px-2"
+            />
           </div>
           <div className="flex-1 mt-4 md:mt-0 space-y-2">
             <input
@@ -106,12 +96,6 @@ export default function Page() {
               placeholder="Enter address"
               className="h-10 bg-gray-200 w-full rounded-md px-2"
               defaultValue={user?.address}
-            />
-            <input
-              {...register("password")}
-              type="password"
-              placeholder="Enter password"
-              className="h-10 bg-gray-200 w-full rounded-md px-2"
             />
           </div>
         </div>

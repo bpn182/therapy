@@ -3,7 +3,7 @@ import { IPathConfig } from "@/app/interfaces/index.interface";
 export const therapyPathConfig: IPathConfig = {
   "/therapy": {
     mainText: "Hello, ",
-    highlightText: "Bipin",
+    highlightText: "",
     subText: "Manage your therapy services here",
   },
   "/therapy/appointment/list": {

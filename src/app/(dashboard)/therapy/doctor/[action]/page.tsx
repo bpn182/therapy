@@ -24,7 +24,7 @@ export default function AddDoctor() {
       setValue("specialization", doctor.specialization);
       setValue("personalBio", doctor.personalBio);
       setValue("phone", doctor.phone);
-      setValue("serviceId", doctor.service);
+      setValue("serviceId", doctor.service.id);
     }
   }, [doctor, setValue]);
 
