@@ -45,7 +45,7 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
       setLoggedInsurance(null);
     }
     setUser(null);
-    router.push(`/${userType}/signin`);
+    router.push(`/`);
   };
 
   const onClickAccountSettings = () => {
@@ -65,7 +65,7 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
       },
     {
       name: "Sign out",
-      href: `/${userType}/signin`,
+      href: `/`,
       onClick: logoutUser,
       icon: <ArrowLeftEndOnRectangleIcon className={IconCss} />,
       disabled: false,
