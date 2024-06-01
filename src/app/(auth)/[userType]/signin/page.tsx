@@ -14,8 +14,6 @@ export default function SignIn({ params }: { params: { userType: string } }) {
   const pathname = usePathname();
   let userRole = pathname.split("/")[1].toUpperCase();
 
-  console.log("pathname", pathname);
-  console.log("userRole", userRole);
   const { userType } = params;
   const {
     register,
@@ -78,17 +76,14 @@ export default function SignIn({ params }: { params: { userType: string } }) {
     if (userRole === "INSURANCE") {
       insuranceMutation.mutate(data);
     } else {
-      console.log(data);
       mutation.mutate(data);
     }
   };
 
   const navigateToDashboard = (data: any) => {
-    console.log();
     if (data.role === "ADMIN") {
       router.push(`/admin`);
-    }
-    if (data.role === "INSURANCE") {
+    } else if (data.role === "INSURANCE") {
       router.push(`/insurance`);
     } else if (data.role === "THERAPY_PROVIDER") {
       router.push(`/therapy`);
@@ -110,13 +105,13 @@ export default function SignIn({ params }: { params: { userType: string } }) {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3  pt-2">
           <input
-            {...register("email")}
+            {...register("email", { required: true })}
             className="custom-input"
             type="text"
             placeholder="Email"
           />{" "}
           <input
-            {...register("password")}
+            {...register("password", { required: true })}
             className="custom-input"
             type="password"
             placeholder="Password"

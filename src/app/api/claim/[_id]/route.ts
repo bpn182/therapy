@@ -14,7 +14,7 @@ export const GET = asyncHandler(
       throw new Error("claim not found");
     }
 
-    return NextResponse.json({ data: claim });
+    return NextResponse.json({ data: claim });  
   }
 );
 

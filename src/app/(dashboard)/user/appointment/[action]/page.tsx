@@ -72,7 +72,6 @@ const CreateAppointment = () => {
     );
 
     formData.therapyProviderId = selectedService.providerId;
-    console.log("data", formData);
 
     if (appointment && appointment.id) {
       updateMutation.mutate(formData);

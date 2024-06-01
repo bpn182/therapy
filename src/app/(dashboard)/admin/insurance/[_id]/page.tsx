@@ -17,7 +17,6 @@ const Page = () => {
   const { insurance } = useTherapyStore();
   const user_type = pathname.split("/")[2];
 
-  console.log("insurance", insurance);
   useEffect(() => {
     if (insurance) {
       setValue("name", insurance.name);
@@ -55,7 +54,6 @@ const Page = () => {
   };
 
   const onSubmit = (data: Insurance) => {
-    console.log(data);
     updateMutation.mutate(data);
   };
   return (

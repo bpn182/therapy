@@ -21,9 +21,9 @@ export const useClaimListQuery = ({
   });
 };
 
-export const useClaimStatListQuery = (provider?: string) => {
+export const useClaimStatListQuery = (insuranceId?: string) => {
   return useQuery({
     queryKey: ["claimStatsList"],
-    queryFn: () => Api.listClaimStats(provider),
+    queryFn: () => Api.listClaimStats(insuranceId),
   });
 };

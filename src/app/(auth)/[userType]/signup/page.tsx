@@ -56,37 +56,37 @@ export default function SignUp({ params }: { params: { userType: string } }) {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3  pt-2">
           <input
-            {...register("firstName")}
+            {...register("firstName", { required: true })}
             className="custom-input"
             type="text"
             placeholder="First Name"
           />
           <input
-            {...register("lastName")}
+            {...register("lastName", { required: true })}
             className="custom-input"
             type="text"
             placeholder="Last Name"
           />
           <input
-            {...register("email")}
+            {...register("email", { required: true })}
             className="custom-input"
             type="text"
             placeholder="Email"
           />
           <input
-            {...register("contactNumber")}
+            {...register("contactNumber", { required: true })}
             className="custom-input"
             type="text"
             placeholder="Phone Number"
           />
           <input
-            {...register("address")}
+            {...register("address", { required: true })}
             className="custom-input"
             type="text"
             placeholder="Address"
           />
           <input
-            {...register("password")}
+            {...register("password", { required: true })}
             className="custom-input"
             type="password"
             placeholder="Password"

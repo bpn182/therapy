@@ -41,7 +41,6 @@ export const useTherapyStore = create<IStore>((set) => ({
     ? JSON.parse(String(getItemFromLocalStorage("user")))
     : null,
   setUser: (user) => {
-    console.log("user", user);
     if (user) {
       setItemInLocalStorage("user", JSON.stringify(user));
     } else {

@@ -1,5 +1,5 @@
 import db from "@/app/db/db";
-import { comparePassword } from "@/utils/utils";
+import { comparePassword, signToken } from "@/utils/utils";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
@@ -43,9 +43,8 @@ export async function POST(request: NextRequest) {
       throw new Error("Invalid token");
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, secret, {
-      expiresIn: "30d",
-    });
+    const payload = { id: user.id, role: user.role };
+    const token = await signToken(payload);
 
     return NextResponse.json({
       data: user,

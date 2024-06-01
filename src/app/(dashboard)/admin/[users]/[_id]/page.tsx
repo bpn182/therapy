@@ -17,7 +17,6 @@ const Page = () => {
   const { tempUser: user } = useTherapyStore();
   const user_type = pathname.split("/")[2];
 
-  console.log("tempUser", user);
   useEffect(() => {
     if (user) {
       setValue("firstName", user.firstName);
@@ -31,7 +30,6 @@ const Page = () => {
     mutationFn: (data: User) => Api.updateUserById(user.id, data),
     onSuccess: (data) => {
       successToast("User updated successfully.");
-      console.log("after update", data);
       router.push(`/admin/${user_type}/list`);
     },
     onError: (error) => {
@@ -55,7 +53,6 @@ const Page = () => {
   };
 
   const onSubmit = (data: User) => {
-    console.log(data);
     updateMutation.mutate(data);
   };
   return (

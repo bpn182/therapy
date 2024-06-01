@@ -4,6 +4,25 @@ import { asyncHandler } from "@/middleware/asyncHandler";
 import { hashPassword } from "@/utils/utils";
 import { NextRequest, NextResponse } from "next/server";
 
+export const GET = asyncHandler(
+  async (request: NextRequest, { params }: IParams) => {
+    const { _id } = params;
+
+    const user = await db.user.findUnique({
+      where: { id: _id },
+      include: {
+        insurance: true,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ data: user });
+  }
+);
+
 export const PUT = asyncHandler(
   async (request: NextRequest, { params }: IParams) => {
     const { _id } = params;
@@ -33,8 +52,6 @@ export const PUT = asyncHandler(
       const hashedPassword = await hashPassword(password);
       data.password = hashedPassword;
     }
-
-    console.log("update data", data);
 
     const user = await db.user.update({
       where: { id: _id },
