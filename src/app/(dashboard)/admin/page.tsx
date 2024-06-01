@@ -1,4 +1,5 @@
 "use client";
+import { useClaimStatListQuery } from "@/Query/claim.query";
 import { useInsuranceListQuery } from "@/Query/insurance.query";
 import { useUserListQuery } from "@/Query/user.query";
 import { mockUsers } from "@/constants/mock";
@@ -20,6 +21,7 @@ export default function AdminPage() {
   const { data: users = [] } = useUserListQuery("USER");
   const { data: providers = [] } = useUserListQuery("THERAPY_PROVIDER");
   const { data: insurances = [] } = useInsuranceListQuery();
+  const { data: ClaimStats = [] } = useClaimStatListQuery();
 
   const roles = mockUsers.reduce((acc: any, user: any) => {
     acc[user.role] = (acc[user.role] || 0) + 1;
@@ -27,10 +29,11 @@ export default function AdminPage() {
   }, {});
 
   const data = [
-    { name: 'Users', value: users.length },
-    { name: 'Providers', value: providers.length },
-    { name: 'Insurances', value: insurances.length },
-  ];  const COLORS = ["#FF6384", "#36A2EB", "#FFCE56"];
+    { name: "Users", value: users.length },
+    { name: "Providers", value: providers.length },
+    { name: "Insurances", value: insurances.length },
+  ];
+  const COLORS = ["#FF6384", "#36A2EB", "#FFCE56"];
 
   const options: any = {
     plugins: {
@@ -40,28 +43,6 @@ export default function AdminPage() {
     },
   };
 
-  const claimData: any = [
-    {
-      name: "Month 5",
-      approvedClaims: 2,
-    },
-    {
-      name: "Month 4",
-      approvedClaims: 5,
-    },
-    {
-      name: "Month 3",
-      approvedClaims: 4,
-    },
-    {
-      name: "Month 2",
-      approvedClaims: 3,
-    },
-    {
-      name: "Month 1",
-      approvedClaims: 8,
-    },
-  ];
   return (
     <div className="flex flex-row items-center">
       <div>
@@ -90,7 +71,7 @@ export default function AdminPage() {
         <BarChart
           width={400}
           height={400}
-          data={claimData}
+          data={ClaimStats}
           margin={{
             top: 20,
             right: 30,
@@ -103,7 +84,7 @@ export default function AdminPage() {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="approvedClaims" fill="#8884d8" />
+          <Bar dataKey="data" fill="#8884d8" />
         </BarChart>
       </div>
     </div>

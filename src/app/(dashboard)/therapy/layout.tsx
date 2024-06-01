@@ -11,6 +11,10 @@ import {
   BookOpenIcon,
 } from "@heroicons/react/24/outline";
 import TherapyServiceStat from "../_components/TherapyServiceStat";
+import { useServicesList } from "@/Query/service.query";
+import { useTherapyStore } from "@/store/zustand";
+import { useEffect, useState } from "react";
+import Loading from "@/components/ui/Loading";
 
 const menuItems = [
   {
@@ -50,8 +54,22 @@ export default function TherapyLayout({
   children,
 }: Readonly<IUserLayoutProps>) {
   const router = useRouter();
+  const { user = {}, accessToken } = useTherapyStore();
+  const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    console.log("accessToken", accessToken, user);
+    if (!accessToken || (user && user.role !== "THERAPY_PROVIDER")) {
+      router.push("/therapy/signin");
+    }
+    setIsLoading(false);
+  }, [accessToken, router, user, isLoading]);
 
+  const { data = [] } = useServicesList(user?.id);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -67,7 +85,7 @@ export default function TherapyLayout({
                 url="/therapy/service/list"
                 mainText="Services"
                 subText="Current Services"
-                count={4}
+                count={data.length || 0}
               />
             </div>
 

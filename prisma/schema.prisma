@@ -89,7 +89,12 @@ model Appointment {
 model Insurance {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  password    String
+  email       String?
   description String
+  address     String?
+  phone       String?
+  role        String  @default("INSURANCE")
   Claim       Claim[]
   User        User[]
 }

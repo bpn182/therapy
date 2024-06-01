@@ -34,6 +34,8 @@ export const PUT = asyncHandler(
       data.password = hashedPassword;
     }
 
+    console.log("update data", data);
+
     const user = await db.user.update({
       where: { id: _id },
       data: data,

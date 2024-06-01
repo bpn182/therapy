@@ -1,16 +1,18 @@
 "use client";
 import { useTherapyStore } from "@/store/zustand";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Api from "@/api/api";
 import { useInsuranceListQuery } from "@/Query/insurance.query";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 
 export default function Insurances() {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
 
-  const { user, setAppointment } = useTherapyStore();
+  const { insurance, setInsurance } = useTherapyStore();
   const { data: insurances = [], isLoading, error } = useInsuranceListQuery();
 
   const deleteMutation = useMutation({
@@ -31,20 +33,15 @@ export default function Insurances() {
     },
   });
 
-  const handleEdit = (appointment: any) => {
-    setAppointment(appointment);
-    console.log(appointment);
-    router.push("/user/appointment/update");
+  const handleEdit = (insurance: any) => {
+    setInsurance(insurance);
+    const user_type = pathname.split("/")[2];
+    router.push(`/admin/${user_type}/${insurance.id}`);
   };
 
   const handleDelete = (appointment: any) => {
     console.log(appointment);
     deleteMutation.mutate(appointment.id);
-  };
-
-  const handleNewAppointment = () => {
-    setAppointment(null);
-    router.push("/user/appointment/add");
   };
 
   return (
@@ -53,7 +50,6 @@ export default function Insurances() {
         <div className="font-bold text-darkblue flex items-center">
           Insurance
         </div>
-   
       </div>
       <table className="w-full text-left text-sm mt-2">
         <thead>
@@ -65,9 +61,9 @@ export default function Insurances() {
               Description
             </th>
 
-            {/* <th className="border-b-2 border-gray-300 py-2 font-semibold">
+            <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Actions
-            </th> */}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -80,16 +76,16 @@ export default function Insurances() {
                 {insurance.description}
               </td>
 
-              {/* <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
+              <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
                 <PencilSquareIcon
                   className="cursor-pointer"
                   onClick={() => handleEdit(insurance)}
                 />
-                <TrashIcon
+                {/* <TrashIcon
                   className="text-dangerRed cursor-pointer"
                   onClick={() => handleDelete(insurance)}
-                />
-              </td> */}
+                /> */}
+              </td>
             </tr>
           ))}
         </tbody>

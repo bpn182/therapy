@@ -86,7 +86,6 @@ export default function AddClaim() {
   };
 
   const onSubmit = (data: any) => {
-    console.log("values", data);
     if (claim && claim.id) {
       updateMutation.mutate(data);
     } else {

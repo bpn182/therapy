@@ -27,6 +27,7 @@ export const GET = asyncHandler(async (request: NextRequest) => {
       userId: true,
       date: true,
       time: true,
+      status: true,
       user: {
         select: {
           id: true,

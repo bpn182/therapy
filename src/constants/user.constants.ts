@@ -16,7 +16,7 @@ export const userPathConfig: IPathConfig = {
   },
   "/user/claim/update": {
     mainText: "Update ",
-    highlightText: "Insurance",
+    highlightText: "Claim",
   },
   "/user/appointment/list": {
     mainText: "Your ",

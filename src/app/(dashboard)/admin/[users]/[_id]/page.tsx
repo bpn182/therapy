@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-import { useInsuranceListQuery } from "@/Query/insurance.query";
 import Button from "@/components/form/Button";
 import { TitleWithLine } from "@/components/ui/TitleWithLine";
 import { useTherapyStore } from "@/store/zustand";
@@ -8,17 +7,19 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import Api from "@/api/api";
 import { toast } from "react-toastify";
-import { Insurance, User } from "@prisma/client";
+import { User } from "@prisma/client";
+import { usePathname, useRouter } from "next/navigation";
 
-export default function Page() {
-  const { user, setUser } = useTherapyStore();
+const Page = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const { register, handleSubmit, setValue } = useForm<User>();
+  const { tempUser: user } = useTherapyStore();
+  const user_type = pathname.split("/")[2];
 
-  const { data: insurances = [], isLoading, error } = useInsuranceListQuery();
-
+  console.log("tempUser", user);
   useEffect(() => {
     if (user) {
-      setValue("insuranceId", user.insuranceId);
       setValue("firstName", user.firstName);
       setValue("lastName", user.lastName);
       setValue("contactNumber", user.contactNumber);
@@ -30,7 +31,8 @@ export default function Page() {
     mutationFn: (data: User) => Api.updateUserById(user.id, data),
     onSuccess: (data) => {
       successToast("User updated successfully.");
-      setUser(data);
+      console.log("after update", data);
+      router.push(`/admin/${user_type}/list`);
     },
     onError: (error) => {
       console.log(error);
@@ -53,11 +55,16 @@ export default function Page() {
   };
 
   const onSubmit = (data: User) => {
+    console.log(data);
     updateMutation.mutate(data);
   };
   return (
     <>
-      <TitleWithLine title="Account Settings" />
+      <TitleWithLine
+        title={
+          user_type === "user" ? "Update User" : "Update Therapy Provider "
+        }
+      />
       <form className="mt-4 pb-8" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col md:flex-row mb-3">
           <div className="flex-1 space-y-2 md:mr-4">
@@ -75,20 +82,6 @@ export default function Page() {
               className="h-10 bg-gray-200 w-full rounded-md px-2"
               defaultValue={user?.contactNumber}
             />
-            {isLoading ? (
-              <p>Loading...</p>
-            ) : error ? (
-              <p>Error loading services</p>
-            ) : (
-              <select {...register("insuranceId")} className="custom-input">
-                <option value="">Select a insurance</option>
-                {insurances.map((insurance: Insurance) => (
-                  <option key={insurance.id} value={insurance.id}>
-                    {insurance.name}
-                  </option>
-                ))}
-              </select>
-            )}
           </div>
           <div className="flex-1 mt-4 md:mt-0 space-y-2">
             <input
@@ -105,12 +98,6 @@ export default function Page() {
               className="h-10 bg-gray-200 w-full rounded-md px-2"
               defaultValue={user?.address}
             />
-            <input
-              {...register("password")}
-              type="password"
-              placeholder="Enter password"
-              className="h-10 bg-gray-200 w-full rounded-md px-2"
-            />
           </div>
         </div>
         <Button
@@ -121,4 +108,6 @@ export default function Page() {
       </form>
     </>
   );
-}
+};
+
+export default Page;

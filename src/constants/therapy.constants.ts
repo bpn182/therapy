@@ -34,4 +34,8 @@ export const therapyPathConfig: IPathConfig = {
     mainText: "Update ",
     highlightText: "Doctor",
   },
+  "/therapy/account-settings": {
+    mainText: "Account ",
+    highlightText: "Settings",
+  },
 };

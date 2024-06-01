@@ -20,3 +20,10 @@ export const useClaimListQuery = ({
       Api.listClaims(userId, insuranceId, therapyProviderId, serviceId),
   });
 };
+
+export const useClaimStatListQuery = (provider?: string) => {
+  return useQuery({
+    queryKey: ["claimStatsList"],
+    queryFn: () => Api.listClaimStats(provider),
+  });
+};

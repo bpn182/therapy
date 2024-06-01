@@ -11,6 +11,10 @@ import StatCard from "@/components/card/statCard";
 import { useUserListQuery } from "@/Query/user.query";
 import { useInsuranceListQuery } from "@/Query/insurance.query";
 import { useClaimListQuery } from "@/Query/claim.query";
+import { useEffect, useState } from "react";
+import { useTherapyStore } from "@/store/zustand";
+import { useRouter } from "next/navigation";
+import Loading from "@/components/ui/Loading";
 
 const menuItems = [
   {
@@ -44,10 +48,28 @@ interface IUserLayoutProps {
   children: React.ReactNode;
 }
 export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { user = {}, accessToken } = useTherapyStore();
+
   const { data: users = [] } = useUserListQuery("USER");
   const { data: providers = [] } = useUserListQuery("THERAPY_PROVIDER");
   const { data: insuraces = [] } = useInsuranceListQuery();
   const { data: claims = [] } = useClaimListQuery({});
+
+  useEffect(() => {
+    setIsLoading(false);
+
+    if (!accessToken || (user && user.role !== "ADMIN")) {
+      router.push("/admin/signin");
+    }
+  }, [accessToken, router, user, isLoading]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <NavBar userType="user" />

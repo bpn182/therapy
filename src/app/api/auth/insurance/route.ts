@@ -7,18 +7,15 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
-    // Find the user with the provided email
-    const user = await db.user.findFirst({
+    // Find the insurance with the provided email
+    const insurance = await db.insurance.findFirst({
       where: {
         email,
       },
-      include: {
-        insurance: true,
-      },
     });
 
-    // If no user is found, return an error
-    if (!user) {
+    // If no insurance is found, return an error
+    if (!insurance) {
       return NextResponse.json(
         { message: "Invalid email or password" },
         { status: 401 }
@@ -26,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if the provided password matches the stored password
-    const isPasswordValid = await comparePassword(password, user.password);
+    const isPasswordValid = await comparePassword(password, insurance.password);
 
     // If the password is invalid, return an error
     if (!isPasswordValid) {
@@ -36,19 +33,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // If the email and password are valid, return the user
+    // If the email and password are valid, return the insurance
     const secret = process.env.JWT_SECRET as string;
 
     if (!secret) {
       throw new Error("Invalid token");
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, secret, {
+    const token = jwt.sign({ id: insurance.id, role: "INSURANCE" }, secret, {
       expiresIn: "30d",
     });
 
     return NextResponse.json({
-      data: user,
+      data: insurance,
       accessToken: token,
       refreshToken: token,
       message: "success",

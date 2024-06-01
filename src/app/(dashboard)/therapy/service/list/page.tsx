@@ -3,17 +3,17 @@ import Button from "@/components/form/Button";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTherapyStore } from "@/store/zustand";
 import { useRouter } from "next/navigation";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Api from "@/api/api";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useServicesList } from "@/Query/service.query";
 
 export default function Services() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { setService } = useTherapyStore();
+  const { user, setService } = useTherapyStore();
 
-  const { data = [], isLoading, error } = useServicesList();
+  const { data = [], isLoading, error } = useServicesList(user?.id);
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => Api.deleteServiceById(id),
@@ -39,7 +39,6 @@ export default function Services() {
   };
 
   const handleDelete = (service: any) => {
-    console.log(service);
     deleteMutation.mutate(service.id);
   };
 

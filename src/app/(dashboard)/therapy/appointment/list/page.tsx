@@ -42,12 +42,10 @@ export default function Appointments() {
 
   const handleEdit = (appointment: any) => {
     setAppointment(appointment);
-    console.log(appointment);
     router.push(`/${userRole}/appointment/update`);
   };
 
   const handleDelete = (appointment: any) => {
-    console.log(appointment);
     deleteMutation.mutate(appointment.id);
   };
 
@@ -79,6 +77,9 @@ export default function Appointments() {
               Appointment Time
             </th>
             <th className="border-b-2 border-gray-300 py-2 font-semibold">
+              Status
+            </th>
+            <th className="border-b-2 border-gray-300 py-2 font-semibold">
               Actions
             </th>
           </tr>
@@ -98,17 +99,20 @@ export default function Appointments() {
               <td className="border-b border-gray-200 py-2">
                 {appointment.time}
               </td>
+              <td className="border-b border-gray-200 py-2">
+                {appointment.status}
+              </td>
               <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
                 <PencilSquareIcon
                   className="cursor-pointer"
                   onClick={() => handleEdit(appointment)}
                 />
-                {userRole === "user" ? null : (
+                {/* {userRole === "user" ? null : (
                   <TrashIcon
                     className="text-dangerRed cursor-pointer"
                     onClick={() => handleDelete(appointment)}
                   />
-                )}
+                )} */}
               </td>
             </tr>
           ))}

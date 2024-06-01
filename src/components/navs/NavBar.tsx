@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useTherapyStore } from "@/store/zustand";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface INavBarProps {
@@ -19,18 +19,31 @@ const IconCss = "h-5 w-5 mr-4 text-customGreen font-bold";
 
 const NavBar: React.FC<INavBarProps> = ({ userType }) => {
   const router = useRouter();
-  const { user = {}, setUser, setAccessToken } = useTherapyStore();
+  const pathname = usePathname();
+  const {
+    user = {},
+    setUser,
+    setAccessToken,
+    loggedInsurance = {},
+    setLoggedInsurance,
+  } = useTherapyStore();
   const [isLoading, setIsLoading] = useState(true);
+
+  const isAdmin = pathname.split("/")[1] === "admin";
+  const isInsurance = pathname.split("/")[1] === "insurance";
 
   useEffect(() => {
     // When the user object is available, set isLoading to false
-    if (user) {
+    if (user || (isInsurance && loggedInsurance)) {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, loggedInsurance, isInsurance]);
 
   const logoutUser = () => {
     setAccessToken(null);
+    if (userType === "insurance") {
+      setLoggedInsurance(null);
+    }
     setUser(null);
     router.push(`/${userType}/signin`);
   };
@@ -39,14 +52,17 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
     router.push(`/${userType}/account-settings`);
   };
 
-  const menuItems = [
-    {
-      name: "Account settings",
-      href: `/${userType}/account-settings`,
-      onClick: onClickAccountSettings,
-      icon: <HomeIcon className={"h-5 w-5 mr-4 text-customGreen font-bold"} />,
-      disabled: true,
-    },
+  const menuItems: any = [
+    !isAdmin &&
+      !isInsurance && {
+        name: "Account settings",
+        href: `/${userType}/account-settings`,
+        onClick: onClickAccountSettings,
+        icon: (
+          <HomeIcon className={"h-5 w-5 mr-4 text-customGreen font-bold"} />
+        ),
+        disabled: true,
+      },
     {
       name: "Sign out",
       href: `/${userType}/signin`,
@@ -54,7 +70,8 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
       icon: <ArrowLeftEndOnRectangleIcon className={IconCss} />,
       disabled: false,
     },
-  ];
+  ].filter(Boolean);
+
   return (
     <nav className="bg-darkblue text-white flex items-center justify-between flex-wrap py-2 pl-20 pr-16">
       <div className="cursor-pointer">
@@ -76,7 +93,11 @@ const NavBar: React.FC<INavBarProps> = ({ userType }) => {
         />
         <div className="flex flex-col">
           <div className="font-semibold text-sm">
-            {isLoading ? "Loading..." : user?.firstName + " " + user?.lastName}
+            {isLoading
+              ? "Loading..."
+              : isInsurance
+              ? (loggedInsurance as { name?: string })?.name
+              : user?.firstName + " " + user?.lastName}
           </div>
           <div className="text-xs itallic">Account Settings</div>
         </div>

@@ -28,7 +28,6 @@ export default function Page() {
     mutationFn: (data: User) => Api.updateUserById(user.id, data),
     onSuccess: (data) => {
       successToast("User updated successfully.");
-      console.log("after update", data);
       setUser(data);
     },
     onError: (error) => {
@@ -52,7 +51,6 @@ export default function Page() {
   };
 
   const onSubmit = (data: User) => {
-    console.log(data);
     updateMutation.mutate(data);
   };
   return (

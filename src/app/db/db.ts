@@ -9,9 +9,9 @@ const prisma = global.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV === "development") global.prisma = prisma;
 
-prisma.user.findFirst()
-  .then(user => console.log('Connected to the database successfully.'))
-  .catch(error => console.error('Failed to connect to the database:', error));
-
+prisma.user
+  .findFirst()
+  .then((user) => console.log("Connected to the database successfully."))
+  .catch((error) => console.error("Failed to connect to the database:", error));
 
 export default prisma;

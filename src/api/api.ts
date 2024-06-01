@@ -20,6 +20,11 @@ class API {
     return response;
   };
 
+  public insuranceLogin = async (data: any) => {
+    const response = await this.api.post(`/auth/insurance`, data);
+    return response;
+  };
+
   // Users
   public listUsers = async (role?: string) => {
     const response = await this.api.get(`/user?role=${role}`);
@@ -37,8 +42,13 @@ class API {
     return response;
   };
 
-  public listServices = async (providerId?: string) => {
-    const response = await this.api.get(`/therapy/service?${providerId}`);
+  public listServices = async (providerId?: string, userId?: string) => {
+    const response = await this.api.get("/therapy/service", {
+      params: {
+        providerId: providerId,
+        userId: userId,
+      },
+    });
     return response.data;
   };
 
@@ -59,7 +69,11 @@ class API {
   };
 
   public listDoctors = async (providerId?: string) => {
-    const response = await this.api.get(`/therapy/doctor?${providerId}`);
+    const response = await this.api.get(`/therapy/doctor?`, {
+      params: {
+        providerId: providerId,
+      },
+    });
     return response.data;
   };
 
@@ -110,10 +124,22 @@ class API {
     return response.data;
   };
 
+  public updateInsuranceById = async (id: string, data: any) => {
+    const response = await this.api.put(`/insurance/${id}`, data);
+    return response.data;
+  };
+
   // claims
   public addClaim = async (claim: any) => {
     const response = await this.api.post(`/claim`, claim);
     return response;
+  };
+
+  public listClaimStats = async (insuranceId?: string) => {
+    const response = await this.api.get(`/claim/stats`, {
+      params: { insuranceId: insuranceId },
+    });
+    return response.data;
   };
 
   public listClaims = async (

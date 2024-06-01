@@ -20,9 +20,7 @@ const CreateAppointment = () => {
   const { register, handleSubmit, setValue } = useForm<any>();
   const { data = [], isLoading, error } = useServicesList();
 
-  console.log("pathname", pathname);
   useEffect(() => {
-    console.log("setting values", appointment);
     if (appointment) {
       setValue("serviceId", appointment.serviceId);
       setValue("date", appointment.date);

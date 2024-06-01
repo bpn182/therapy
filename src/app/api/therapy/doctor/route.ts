@@ -3,7 +3,16 @@ import { asyncHandler } from "@/middleware/asyncHandler";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = asyncHandler(async (request: NextRequest) => {
+  const { searchParams } = new URL(request.url);
+  const providerId = searchParams.get("providerId");
+
+  let whereClause: any = {};
+
+  if (providerId) {
+    whereClause.providerId = providerId;
+  }
   const services = await db.doctor.findMany({
+    where: whereClause,
     select: {
       id: true,
       name: true,

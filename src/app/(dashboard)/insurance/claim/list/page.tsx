@@ -12,14 +12,14 @@ import { toast } from "react-toastify";
 
 export default function Claims() {
   const router = useRouter();
-  const { user, setClaim, claim } = useTherapyStore();
+  const { loggedInsurance, setClaim, claim } = useTherapyStore();
   const queryClient = useQueryClient();
 
   const {
     data: claims = [],
     isLoading,
     error,
-  } = useClaimListQuery({ userId: user?.id });
+  } = useClaimListQuery({ insuranceId: loggedInsurance?.id });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => Api.deleteClaimById(id),
@@ -41,14 +41,11 @@ export default function Claims() {
 
   const handleEdit = (claim: any) => {
     setClaim(claim);
-    console.log(claim);
     router.push("/insurance/claim/update");
   };
 
   const handleDelete = (claim: any) => {
     deleteMutation.mutate(claim.id);
-
-    console.log(claim);
   };
   return (
     <>
@@ -98,10 +95,10 @@ export default function Claims() {
                   className="cursor-pointer"
                   onClick={() => handleEdit(claim)}
                 />
-                <TrashIcon
+                {/* <TrashIcon
                   className="text-dangerRed cursor-pointer"
                   onClick={() => handleDelete(claim)}
-                />
+                /> */}
               </td>
             </tr>
           ))}

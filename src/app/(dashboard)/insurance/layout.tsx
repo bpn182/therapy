@@ -27,12 +27,14 @@ interface IUserLayoutProps {
 }
 export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
   const router = useRouter();
-  const { user } = useTherapyStore();
+  const { loggedInsurance } = useTherapyStore();
 
-  const { data: claims = [] } = useClaimListQuery({ userId: user?.id });
+  const { data: claims = [] } = useClaimListQuery({
+    insuranceId: loggedInsurance?.id,
+  });
   return (
     <>
-      <NavBar userType="user" />
+      <NavBar userType="insurance" />
       <main className="h-screen bg-gray-100">
         <div className="flex justify-center pt-8">
           <LeftMenuItems menuItems={menuItems} />
@@ -44,7 +46,7 @@ export default function UserLayout({ children }: Readonly<IUserLayoutProps>) {
                 url="/insurance/claim/list"
                 mainText="Claims"
                 subText="View Claims"
-                count={4}
+                count={claims.length || 0}
               />
             </div>
 

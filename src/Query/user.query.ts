@@ -3,7 +3,7 @@ import Api from "@/api/api";
 
 export const useUserListQuery = (role?: string) => {
   return useQuery({
-    queryKey: ["userList"],
+    queryKey: ["userList", role],
     queryFn: () => Api.listUsers(role),
   });
 };

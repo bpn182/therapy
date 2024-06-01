@@ -12,8 +12,8 @@ export default function Appointments() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { setDoctor } = useTherapyStore();
-  const { data = [], isLoading, error } = useDoctorListQuery();
+  const { user, setDoctor } = useTherapyStore();
+  const { data = [], isLoading, error } = useDoctorListQuery(user?.id);
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => Api.deleteDoctorById(id),
@@ -39,7 +39,6 @@ export default function Appointments() {
   };
 
   const handleDelete = (doctor: any) => {
-    console.log(doctor);
     deleteMutation.mutate(doctor.id);
   };
 

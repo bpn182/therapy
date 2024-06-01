@@ -44,6 +44,7 @@ export default function AddClaim() {
       setValue("therapyProviderId", claim.therapyProviderId);
       setValue("details", claim.details);
       setValue("claimDetails", claim.claimDetails);
+      setValue("status", claim.status);
     }
   }, [claim, setValue]);
 
@@ -86,7 +87,6 @@ export default function AddClaim() {
   };
 
   const onSubmit = (data: any) => {
-    console.log("values", data);
     if (claim && claim.id) {
       updateMutation.mutate(data);
     } else {
@@ -133,6 +133,17 @@ export default function AddClaim() {
                 ))}
               </select>
             )}
+
+            <select {...register("status")} className="custom-input">
+              <option value="">Select a status</option>
+              {["PENDING", "APPROVED", "REJECTED", "REQUIRES_ACTION"].map(
+                (status: any) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                )
+              )}
+            </select>
             {/* <input
               ref={fileInputRef}
               className=""

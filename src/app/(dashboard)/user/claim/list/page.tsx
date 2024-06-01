@@ -17,7 +17,6 @@ export default function Claims() {
   const pathname = usePathname();
   let userRole = pathname.split("/")[1];
 
-
   const {
     data: claims = [],
     isLoading,
@@ -49,8 +48,6 @@ export default function Claims() {
 
   const handleDelete = (claim: any) => {
     deleteMutation.mutate(claim.id);
-
-    console.log(claim);
   };
   return (
     <>
@@ -96,16 +93,17 @@ export default function Claims() {
               <td className="border-b border-gray-200 py-2">{claim.details}</td>
               <td className="border-b border-gray-200 py-2">{claim.status}</td>
               <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
-                <PencilSquareIcon
-                  className="cursor-pointer"
-                  onClick={() => handleEdit(claim)}
-                />
-                {userRole === "user" ? null : (
-                  <TrashIcon
-                    className="text-dangerRed cursor-pointer"
-                    onClick={() => handleDelete(claim)}
+                {claim.status === "PENDING" && (
+                  <PencilSquareIcon
+                    className="cursor-pointer"
+                    onClick={() => handleEdit(claim)}
                   />
                 )}
+
+                {/* <TrashIcon
+                  className="text-dangerRed cursor-pointer"
+                  onClick={() => handleDelete(claim)}
+                /> */}
               </td>
             </tr>
           ))}

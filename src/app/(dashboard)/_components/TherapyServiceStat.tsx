@@ -1,14 +1,11 @@
 "use client";
-import { useServicesList } from "@/Query/service.query";
-import Api from "@/api/api";
 import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 interface TherapyServiceStatProps {
   url: string;
   mainText: string;
-  count: number;
+  count?: number;
   subText: string;
 }
 
@@ -20,7 +17,6 @@ const TherapyServiceStat: React.FC<TherapyServiceStatProps> = ({
 }) => {
   const router = useRouter();
 
-  const { data = [], isLoading, error } = useServicesList();
 
   const handleServiceClick = () => {
     router.push(url);
@@ -33,7 +29,7 @@ const TherapyServiceStat: React.FC<TherapyServiceStatProps> = ({
     >
       <div>
         <div className="font-bold">{mainText}</div>
-        <div className="text-6xl text-customGreen">{data.length}</div>
+        <div className="text-6xl text-customGreen">{count}</div>
         <div className="text-sm pb-1">{subText}</div>
       </div>
       <div className="flex flex-col justify-end h-full pb-2 text-customGreen">

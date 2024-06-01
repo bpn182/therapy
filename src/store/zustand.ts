@@ -1,9 +1,6 @@
-import { IAppointment } from "@/app/interfaces/appointment.interface";
-import { IClaim } from "@/app/interfaces/claim.interface";
-import { IDoctor } from "@/app/interfaces/doctor.interace";
-import { IService } from "@/app/interfaces/services.interface";
 import { create } from "zustand";
 import { getItemFromLocalStorage, setItemInLocalStorage } from "./localStorage";
+import { Insurance } from "@prisma/client";
 
 export interface IStore {
   appointment: any;
@@ -18,6 +15,12 @@ export interface IStore {
   setAccessToken: (accessToken: string | null) => void;
   user: any;
   setUser: (user: any) => void;
+  insurance: Insurance | null;
+  setInsurance: (insurance: Insurance) => void;
+  tempUser: any;
+  setTempUser: (tempUser: any) => void;
+  loggedInsurance: Insurance | null;
+  setLoggedInsurance: (loggedInsurance: Insurance | null) => void;
 }
 
 export const useTherapyStore = create<IStore>((set) => ({
@@ -45,5 +48,20 @@ export const useTherapyStore = create<IStore>((set) => ({
       setItemInLocalStorage("user", null);
     }
     set({ user });
+  },
+  insurance: null,
+  setInsurance: (insurance) => set({ insurance }),
+  tempUser: null,
+  setTempUser: (tempUser) => set({ tempUser }),
+  loggedInsurance: getItemFromLocalStorage("loggedInsurance")
+    ? JSON.parse(String(getItemFromLocalStorage("loggedInsurance")))
+    : null,
+  setLoggedInsurance: (loggedInsurance: any) => {
+    if (loggedInsurance) {
+      setItemInLocalStorage("loggedInsurance", JSON.stringify(loggedInsurance));
+    } else {
+      setItemInLocalStorage("loggedInsurance", null);
+    }
+    set({ loggedInsurance });
   },
 }));

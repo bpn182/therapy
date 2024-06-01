@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 export default function SignIn({ params }: { params: { userType: string } }) {
   const router = useRouter();
-  const { setAccessToken, setUser } = useTherapyStore();
+  const { setAccessToken, setUser, setLoggedInsurance } = useTherapyStore();
   const pathname = usePathname();
   let userRole = pathname.split("/")[1].toUpperCase();
 
@@ -45,6 +45,28 @@ export default function SignIn({ params }: { params: { userType: string } }) {
     },
   });
 
+  const insuranceMutation = useMutation({
+    mutationFn: Api.insuranceLogin,
+    onSuccess: (response: any) => {
+      const { data, accessToken } = response;
+      if (data && accessToken) {
+        setAccessToken(accessToken);
+        setLoggedInsurance(data);
+        toast.success("Sucessfully logged in.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        navigateToDashboard(data);
+      } else {
+        showErrorToast("Error. Please try again!");
+      }
+    },
+    onError: (error: any) => {
+      const msg = error?.response?.data?.message || "Error. Please try again!";
+      showErrorToast(msg);
+    },
+  });
+
   const showErrorToast = (msg: string) => {
     toast.error(msg, {
       position: "top-right",
@@ -54,7 +76,7 @@ export default function SignIn({ params }: { params: { userType: string } }) {
 
   const onSubmit = (data: any) => {
     if (userRole === "INSURANCE") {
-      router.push(`/insurance`);
+      insuranceMutation.mutate(data);
     } else {
       console.log(data);
       mutation.mutate(data);
@@ -62,8 +84,12 @@ export default function SignIn({ params }: { params: { userType: string } }) {
   };
 
   const navigateToDashboard = (data: any) => {
+    console.log();
     if (data.role === "ADMIN") {
       router.push(`/admin`);
+    }
+    if (data.role === "INSURANCE") {
+      router.push(`/insurance`);
     } else if (data.role === "THERAPY_PROVIDER") {
       router.push(`/therapy`);
     } else if (data.role === "USER") {
@@ -97,7 +123,7 @@ export default function SignIn({ params }: { params: { userType: string } }) {
           />
           <Button text="Login" type="submit" />
         </form>
-        {userRole === "ADMINs" ? null : (
+        {userRole === "ADMIN" || userRole === "INSURANCE" ? null : (
           <div className="text-left font-medium mt-4">
             {"Don't have an account?"}
             <Link

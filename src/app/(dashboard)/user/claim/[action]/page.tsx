@@ -1,4 +1,5 @@
 "use client";
+import { useAppoinmentListQuery } from "@/Query/appointment.query";
 import { useServicesList } from "@/Query/service.query";
 import { useUserListQuery } from "@/Query/user.query";
 import Api from "@/api/api";
@@ -8,11 +9,12 @@ import { useTherapyStore } from "@/store/zustand";
 import { Claim, User } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 export default function AddClaim() {
+  const [selectedService, setSelectedService] = useState<any>({});
   const { claim, user } = useTherapyStore();
   const { register, handleSubmit, setValue } = useForm<any>();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,7 +31,7 @@ export default function AddClaim() {
     data: services = [],
     isLoading: isServiceLoading,
     error: serviceErr,
-  } = useServicesList();
+  } = useServicesList(undefined, user?.id);
 
   useEffect(() => {
     if (claim) {
@@ -85,11 +87,29 @@ export default function AddClaim() {
 
       updateMutation.mutate(data);
     } else {
+      if (!selectedService || !selectedService.providerId) {
+        return showErrorToast("Please select a service");
+      }
       data.userId = user.id;
       data.insuranceId = user.insuranceId;
+      data.therapyProviderId = selectedService.providerId;
 
       mutation.mutate(data);
     }
+  };
+
+  const onChangeService = (serviceId: string) => {
+    console.log(providers, services);
+    const selectedService = services.find(
+      (service: any) => service.id === serviceId
+    );
+
+    setSelectedService(selectedService);
+    const provider = providers.find(
+      (p: any) => p.id === selectedService?.providerId
+    );
+    setValue("therapyProviderId", provider.id);
+    console.log(selectedService, provider);
   };
 
   return (
@@ -117,6 +137,7 @@ export default function AddClaim() {
               <p>Error loading provider</p>
             ) : (
               <select
+                disabled
                 {...register("therapyProviderId")}
                 className="custom-input"
               >
@@ -142,7 +163,11 @@ export default function AddClaim() {
             ) : serviceErr ? (
               <p>Error loading service</p>
             ) : (
-              <select {...register("serviceId")} className="custom-input">
+              <select
+                {...register("serviceId")}
+                className="custom-input"
+                onChange={(e) => onChangeService(e.target.value)}
+              >
                 <option value="">Select a service</option>
                 {services.map((service: any) => (
                   <option key={service.id} value={service.id}>

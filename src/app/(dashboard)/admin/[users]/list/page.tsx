@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 export default function Claims() {
   const router = useRouter();
-  const { user, setClaim, claim } = useTherapyStore();
+  const { tempUser, setTempUser } = useTherapyStore();
   const queryClient = useQueryClient();
   const pathname = usePathname();
 
@@ -40,16 +40,15 @@ export default function Claims() {
     },
   });
 
-  const handleEdit = (claim: any) => {
-    setClaim(claim);
-    console.log(claim);
-    router.push("/admin/claim/update");
+  const handleEdit = (user: any) => {
+    setTempUser(user);
+    const user_type = pathname.split("/")[2];
+    router.push(`/admin/${user_type}/${user.id}`);
   };
 
   const handleDelete = (claim: any) => {
     deleteMutation.mutate(claim.id);
 
-    console.log(claim);
   };
   return (
     <>
@@ -88,16 +87,16 @@ export default function Claims() {
               <td className="border-b border-gray-200 py-2">{user.email}</td>
 
               <td className="border-b border-gray-200 py-2">{user.address}</td>
-              {/* <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
+              <td className="border-b border-gray-200 py-2 flex h-9 space-x-4">
                 <PencilSquareIcon
                   className="cursor-pointer"
-                  // onClick={() => handleEdit(user)}
+                  onClick={() => handleEdit(user)}
                 />
-                <TrashIcon
+                {/* <TrashIcon
                   className="text-dangerRed cursor-pointer"
-                  // onClick={() => handleDelete(user)}
-                />
-              </td> */}
+                  onClick={() => handleDelete(user)}
+                /> */}
+              </td>
             </tr>
           ))}
         </tbody>
