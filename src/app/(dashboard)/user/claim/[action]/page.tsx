@@ -99,7 +99,6 @@ export default function AddClaim() {
   };
 
   const onChangeService = (serviceId: string) => {
-    console.log(providers, services);
     const selectedService = services.find(
       (service: any) => service.id === serviceId
     );
@@ -109,7 +108,6 @@ export default function AddClaim() {
       (p: any) => p.id === selectedService?.providerId
     );
     setValue("therapyProviderId", provider.id);
-    console.log(selectedService, provider);
   };
 
   return (

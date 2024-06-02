@@ -96,10 +96,10 @@ export default function Claims() {
                   className="cursor-pointer"
                   onClick={() => handleEdit(claim)}
                 />
-                <TrashIcon
+                {/* <TrashIcon
                   className="text-dangerRed cursor-pointer"
                   onClick={() => handleDelete(claim)}
-                />
+                /> */}
               </td>
             </tr>
           ))}

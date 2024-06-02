@@ -85,12 +85,12 @@ const Page = () => {
             />
           </div>
           <div className="flex-1 mt-4 md:mt-0 space-y-2">
-            <input
+            {/* <input
               {...register("password")}
               type="text"
               placeholder="Enter password"
               className="h-10 bg-gray-200 w-full rounded-md px-2"
-            />
+            /> */}
             <input
               {...register("address")}
               type="text"
