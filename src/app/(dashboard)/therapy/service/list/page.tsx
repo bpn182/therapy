@@ -87,10 +87,10 @@ export default function Services() {
                   className="cursor-pointer"
                   onClick={() => handleEdit(service)}
                 />
-                <TrashIcon
+                {/* <TrashIcon
                   className="text-dangerRed cursor-pointer"
                   onClick={() => handleDelete(service)}
-                />
+                /> */}
               </td>
             </tr>
           ))}

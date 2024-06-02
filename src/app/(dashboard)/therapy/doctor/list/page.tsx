@@ -97,10 +97,10 @@ export default function Appointments() {
                   className="cursor-pointer"
                   onClick={() => handleEdit(doctor)}
                 />
-                <TrashIcon
+                {/* <TrashIcon
                   className="text-dangerRed cursor-pointer"
                   onClick={() => handleDelete(doctor)}
-                />
+                /> */}
               </td>
             </tr>
           ))}
