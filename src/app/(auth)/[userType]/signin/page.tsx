@@ -30,7 +30,7 @@ export default function SignIn({ params }: { params: { userType: string } }) {
         setUser(data);
         toast.success("Sucessfully logged in.", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
         });
         navigateToDashboard(data);
       } else {

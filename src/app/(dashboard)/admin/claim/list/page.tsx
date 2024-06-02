@@ -19,7 +19,7 @@ export default function Claims() {
     data: claims = [],
     isLoading,
     error,
-  } = useClaimListQuery({ userId: user?.id });
+  } = useClaimListQuery({  });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => Api.deleteClaimById(id),
