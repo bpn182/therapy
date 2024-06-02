@@ -56,7 +56,7 @@ export default function SignIn({ params }: { params: { userType: string } }) {
         });
         navigateToDashboard(data);
       } else {
-        showErrorToast("Error. Please try again!");
+        showErrorToast("Invalid username or passsword!");
       }
     },
     onError: (error: any) => {
