@@ -41,14 +41,12 @@ export default function Claims() {
 
   const handleEdit = (claim: any) => {
     setClaim(claim);
-    console.log(claim);
     router.push("/user/claim/update");
   };
 
   const handleDelete = (claim: any) => {
     deleteMutation.mutate(claim.id);
 
-    console.log(claim);
   };
   return (
     <>

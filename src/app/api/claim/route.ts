@@ -22,6 +22,7 @@ export const GET = asyncHandler(async (request: NextRequest) => {
   }
 
   const claims = await db.claim.findMany({
+    where: whereClause,
     include: {
       user: true,
       service: true,

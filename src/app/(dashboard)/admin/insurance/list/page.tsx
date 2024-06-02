@@ -40,7 +40,6 @@ export default function Insurances() {
   };
 
   const handleDelete = (appointment: any) => {
-    console.log(appointment);
     deleteMutation.mutate(appointment.id);
   };
 

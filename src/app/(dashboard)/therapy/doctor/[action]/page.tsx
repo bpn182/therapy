@@ -67,7 +67,6 @@ export default function AddDoctor() {
   };
 
   const onSubmit = (data: any) => {
-    console.log("values", data);
     if (doctor && doctor.id) {
       updateMutation.mutate(data);
     } else {

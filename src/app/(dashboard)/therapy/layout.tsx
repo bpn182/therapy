@@ -58,7 +58,6 @@ export default function TherapyLayout({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log("accessToken", accessToken, user);
     if (!accessToken || (user && user.role !== "THERAPY_PROVIDER")) {
       router.push("/therapy/signin");
     }

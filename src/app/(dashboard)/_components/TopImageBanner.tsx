@@ -13,7 +13,6 @@ const TopImageBanner: React.FC<ITopImageBannerProps> = ({ pathConfig }) => {
   const { user } = useTherapyStore();
 
   const { mainText, highlightText, subText } = pathConfig[pathname] || {};
-  console.log("pathname", pathname);
 
   const getHighlightText = () => {
     if (pathname === "/therapy" || pathname === "/user") {

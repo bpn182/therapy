@@ -23,7 +23,6 @@ export const PUT = asyncHandler(
   async (request: NextRequest, { params }: IParams) => {
     const { _id } = params;
     const body = await request.json();
-    console.log("body", body);
 
     if (body.password) {
       const hashedPassword = await hashPassword(body.password);
